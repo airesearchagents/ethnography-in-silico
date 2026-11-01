@@ -1,0 +1,21 @@
+{
+  "run_id": "OpenAI_Dynamic_Novel_20261030_183649",
+  "company": "OpenAI",
+  "industry_context": "Dynamic",
+  "product_type": "Novel",
+  "research_question": "How do firms in volatile innovation ecosystems dynamically maneuver their degree of openness over time?",
+  "written_at": "2026-10-30T18:36:49.526412",
+  "phases_captured": {
+    "deliberation": true,
+    "strategy_documents": true,
+    "observation_summary": true,
+    "debriefing": true,
+    "construct_judging": true,
+    "private_channel": true
+  },
+  "study_slug": "openness_maneuvering",
+  "study_version": "0.4.0",
+  "started_at": "2026-10-30T17:48:14.142912",
+  "finished_at": "2026-10-30T18:36:49.493567",
+  "errors": []
+}

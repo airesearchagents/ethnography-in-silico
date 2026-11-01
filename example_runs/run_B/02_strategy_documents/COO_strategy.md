@@ -1,0 +1,82 @@
+# COO — Strategy Document
+## Operations Plan: Scale, Governance, and Risk Mitigation for the Enterprise Cognitive Twin
+**Company:** OpenAI
+**Cell:** Dynamic / Novel
+
+---
+
+## Key challenges
+- Preventing the degradation of software-like gross margins by stopping Sales from committing to bespoke, client-specific API integrations.
+- Managing the critical compliance bottleneck (SOC2 Type II) and legal liability before introducing state-changing capabilities.
+- Provisioning burst-compute resources to support the Product Designer's 'synchronous re-validation' UX without creating vendor concentration or uncontrolled cost spikes.
+- Sequencing our hiring and cross-functional pod deployment to match a phased rollout (Read-Only to State-Changing) without over-hiring ahead of product-market fit.
+
+## Main decisions
+- Enforced a strict 'read-only' constraint for Phase 1 pilots to contain operational liability and sequence our 24/7 support scale-up.
+- Implemented hard governance over the Go-To-Market organization: Sales compensation will be directly tied to selling the pre-certified integration whitelist; zero commissions or approvals for deals requiring custom API mapping.
+- Allocated headcount for a dedicated 'Integration Engineering Pod' (5-7 engineers) solely responsible for building and maintaining the 2-3 whitelisted SecOps integrations.
+- Triggered immediate capacity planning and vendor renegotiation for 24/7 enterprise support, SLA-management infrastructure, and low-latency burst compute ahead of Phase 2.
+
+## Key tensions
+- Speed to Market vs. Enterprise Liability: Pushing for a first-mover advantage while deliberately throttling the product to 'read-only' to survive compliance and liability audits.
+- Enterprise Customization vs. Gross Margins: The tension between landing lucrative enterprise whales by offering bespoke integrations, versus maintaining strict engineering discipline to protect our scalable software margins.
+- Dynamic Iteration vs. Predictable Cost Controls: Empowering exploratory pods to iterate on novel UX capabilities while maintaining strict cost discipline on compute and cloud vendor provisioning.
+
+---
+
+## Body
+
+# Memorandum: Operating Plan for the Enterprise Cognitive Twin
+
+**To:** Functional Leads (Finance, HR, Legal, EngOps, GTM Strategy)
+**From:** Chief Operating Officer
+**Subject:** Execution Plan, Risk Mitigation, and Resource Allocation for 'Enterprise Cognitive Twin' Rollout
+
+## 1. Operational Reality & Strategic Intent
+
+The CEO has mandated our shift toward the "Enterprise Cognitive Twin" as an accountable actor, initially targeting a SecOps wedge. As an organization, we are exceptionally good at training frontier models and iterating on novel UX. We are currently *less* proven at managing high-stakes enterprise liability, strict SLA adherence, and 24/7 state-changing rollback operations. 
+
+My mandate is to ensure our operating model bridges this gap without destroying our gross margins. The strategic constraint is absolute: we are optimizing for a scalable, digital-first product, avoiding the hardware supply chain nightmares of physical robotics, and maintaining disciplined boundaries around what we build versus what we integrate.
+
+## 2. Resource Allocation & Org Design
+
+### Phase 1: High-Touch "Exploratory Pods" (Months 1-4)
+For the initial read-only SecOps rollout, we will not deploy a scaled, generic sales motion. Instead, we are standing up cross-functional **Exploratory Pods**.
+*   **Structure:** Each pod will consist of 1 Product Manager, 1 Forward-Deployed Engineer, 1 Designer, and 1 embedded Legal/Compliance officer.
+*   **Capacity:** We are capping Phase 1 at 5-10 high-touch enterprise design partners. This constraints our compliance bottleneck and allows us to iterate on the "Alert Fatigue" UX risks without requiring a globally scaled support floor.
+*   **Engineering Allocation:** We are carving out a dedicated **Integration Engineering Pod** (5-7 FTEs). Their sole mandate is to build, version, and maintain the 2-3 pre-certified enterprise integrations (e.g., Splunk, CrowdStrike). 
+
+### Phase 2: State-Changing Preparation (Months 5+)
+Transitioning from read-only to state-changing actions represents a massive operational leap. We cannot flip this switch until we have:
+1.  A fully staffed, 24/7 global Tier-1 and Tier-2 support organization.
+2.  Automated rollback pipelines for errant API commits.
+3.  Finalized SLA (Service Level Agreement) structures regarding uptime and response latency.
+
+**HR Action:** Begin talent mapping for enterprise support leadership immediately. We will trigger the hiring wave once Phase 1 hits a predefined "trust threshold" in pilot usage.
+
+## 3. Governance & Margin Protection (GTM Discipline)
+
+The biggest threat to our unit economics in this transition is the temptation to become an IT consulting firm. If Sales promises bespoke API mappings to close an enterprise deal, our engineering burden will scale linearly with revenue, and our margins will collapse.
+
+*   **The Governance Rule:** We will strictly enforce the pre-certified whitelist. We build the integration once, and we sell it to 1,000 clients.
+*   **Sales Compensation:** I am partnering with Finance and GTM to restructure compensation for this product line. Reps will receive zero commission for any deal requiring non-standard integrations. Any deviation requires direct COO approval, and the default answer will be no.
+
+## 4. Vendor Management & Compute Infrastructure
+
+The Product Designer's "Progressive Delegation" UX introduces a synchronous "Re-validating..." micro-state during Human-in-the-Loop (HITL) checkpoints. Operationally, this means unpredictable, spiky compute loads where latency directly impacts user trust.
+
+*   **Vendor Strategy:** EngOps must immediately review our burst-compute provisioning. I am flagging a capacity risk if we rely on our primary cloud vendor for these synchronous spikes. We need to renegotiate our secondary cloud contracts to distribute this load, avoiding supplier concentration and protecting against single-point-of-failure outages during critical enterprise SecOps alerts.
+
+## 5. Compliance, Legal & Liability
+
+We are operating in a highly dynamic, fluid regulatory environment regarding AI agency. To protect the company, Legal must lock down the following before a single customer signs a Phase 1 agreement:
+*   **Liability Ring-Fencing:** Contracts must explicitly state that the AI acts as an asynchronous drafter/analyzer, and the enterprise maintains ultimate state-changing liability via the HITL checkpoint.
+*   **SOC2 Type II:** This is no longer optional. Compliance must clear all SOC2 audits for our sandboxed execution environments within 90 days.
+
+## 6. Known Unknowns (What We Must Discover)
+
+We do not yet know the expected daily alert volume our model will need to process in a live SecOps environment, nor the frequency of HITL checkpoints users will actually engage with before experiencing "alert fatigue." 
+
+*   **How we will find out:** We are deploying comprehensive telemetry in the Phase 1 read-only pilots specifically to track checkpoint engagement rates. We will *not* forecast our Phase 2 cloud compute budgets or 24/7 support headcount until we have 45 days of live Phase 1 telemetry.
+
+Let's execute with discipline. We win by being fast on product iteration, but uncompromisingly rigorous on operational execution.

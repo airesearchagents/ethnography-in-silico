@@ -1,0 +1,107 @@
+# Construct-specific debriefing protocol overlay for the
+# openness_maneuvering study.
+#
+# Layered over `protocols/ethnographic_protocol.yaml` at load time.
+# Adds construct-anchored thematic areas (D-H) that probe the
+# openness construct's mechanics through the panel's own behaviour,
+# never through construct vocabulary. The framework YAML's generic
+# areas (A, B, C, I, J) apply to every study and stay where they
+# are.
+#
+# Methodological note — semi-structured probing
+# ----------------------------------------------
+# The framework-level YAML already carries the generic semi-
+# structured-probing rule (see its `behavioural_rules` section).
+# That rule covers BOTH probe triggers: panel self-contradictions
+# AND surprises relative to the researcher's prior expectations.
+# It is sufficient for this study without further additions.
+#
+# Areas in this overlay map to the rubric dimensions in
+# `studies/openness_maneuvering/__init__.py::_OPENNESS_RUBRIC`:
+#
+#   Area D — Asymmetric treatment          ↔ component_disclosure
+#   Area E — Process and boundary          ↔ process_openness +
+#                                            boundary_permeability
+#   Area F — Posture changes over time     ↔ dynamic capabilities
+#                                            (sense / seize /
+#                                            reconfigure)
+#   Area G — Value and trade               ↔ value_capture_posture
+#   Area H — Position relative to others   ↔ ecosystem_orchestration
+#
+# Add-only: this overlay cannot delete framework-level rules or
+# areas. The framework YAML's load path merges this overlay over
+# its own dict using the deep-merge semantics in
+# `roles/qualitative_researcher_agent._apply_study_overlay`.
+
+thematic_areas_overlay:
+  - id: D
+    name: Asymmetric treatment of pieces
+    purpose: >
+      Surface where the firm treated different components, knowledge,
+      processes, or relationships differently. Probe the firm's
+      disclosure logic through observed behaviour. The panel's own
+      justifications for the asymmetry are the data; do not name
+      construct categories yourself.
+    stems:
+      - "You handled [X] and [Y] very differently. Walk me through what made one stay close and the other go out."
+      - "Which pieces did you keep tightest, and what was the logic? Use your own words."
+      - "If you had treated [Y] the way you treated [X], what would have broken?"
+      - "[ROLE], you raised concern about [X] being shared more widely. What was the worry?"
+      - "There were pieces you barely discussed — [Z]. How come?"
+
+  - id: E
+    name: Process and exchange
+    purpose: >
+      Surface how knowledge, work, and contribution move between
+      the firm and outside it. Probe via concrete examples of who
+      does what, via what mechanism, on what terms. Treat the
+      patterns of exchange as the data; do not name construct
+      categories yourself.
+    stems:
+      - "When you build [X], who's involved — just internal teams, or do others contribute? Walk me through that."
+      - "When something the firm has built ends up outside, how does it get there? Tell me about a recent example."
+      - "What's the firm's posture on sharing how you build, versus sharing what you build?"
+      - "What do you draw on from outside the firm to do [X]? What does that exchange look like in practice?"
+      - "When an outsider contributes to [X], how does that contribution actually get in?"
+
+  - id: F
+    name: Posture changes over time
+    purpose: >
+      Surface the temporal dimension — sensing, seizing,
+      reconfiguring. Treat the firm's stance as something that has
+      moved; surface what made it move. This is the dominant cluster
+      from the original 28-question interview, de-leaded.
+    stems:
+      - "Has the firm's approach to [X] changed since [TIME]? What changed?"
+      - "When you made the call on [X], was that the firm's first take, or had you tried something else before?"
+      - "If the firm had been having this conversation a year ago, would the answer have been different on [X]? In what way?"
+      - "What did you notice in the environment that made you rethink [X]?"
+      - "What had to change inside the firm for you to actually do [X] differently?"
+      - "What pulled in the other direction when you tried to change [X]?"
+      - "Looking forward — what would have to be true for you to revisit [X] again?"
+
+  - id: G
+    name: Value and trade
+    purpose: >
+      Surface what the firm gives and what it gets, in its own
+      words. Probe how the firm thinks about benefit and pay-back;
+      treat the firm's own language as the data; do not name
+      construct categories yourself.
+    stems:
+      - "When you decided to make [X] available beyond the firm, what was the firm getting back in return?"
+      - "What does the firm give up by holding onto [X] instead of putting it out?"
+      - "Walk me through the business logic for [X]. How does the firm benefit from doing it this way?"
+      - "[ROLE], you used the word '[PANEL_VERBATIM]' when talking about [X]. What does that mean for the firm in practice?"
+      - "Of the things you decided this round, which one is the firm most counting on to pay back?"
+
+  - id: H
+    name: Position relative to others
+    purpose: >
+      Surface ecosystem-relational thinking — how the firm positions
+      itself vs other firms, what depends on what.
+    stems:
+      - "How does [X] fit with what other firms in the same space are doing?"
+      - "Who does the firm depend on to make [X] work? Who depends on the firm?"
+      - "When you decided [X], how much of that was about what others would do in response?"
+      - "Where in the market does the firm see itself sitting on [X] — out in front, alongside, behind, or aside?"
+      - "If a competitor copied [X] tomorrow, what would the firm still have that they wouldn't?"

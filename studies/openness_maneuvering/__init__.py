@@ -1,0 +1,515 @@
+"""Study: Strategic Maneuvering of Openness in Open Innovation Ecosystems.
+
+The framework's default study. Examines how firms shift their degree
+of openness over time — what they keep proprietary vs. what they
+expose to partners / customers / the broader ecosystem — and how
+those shifts relate to value capture.
+
+Theoretical lens (for LATER analysis, NOT to steer the researcher in
+data collection): selective revealing (Henkel 2006), dynamic
+capabilities (Teece, Pisano & Shuen 1997), and a design-science /
+ecosystem-shaping orientation (Jacobides, Cennamo & Gawer 2018) —
+the analytical question is how firms PROACTIVELY shape their
+ecosystems by choosing which assets to keep internal vs reveal
+externally.
+
+This module exports `STUDY: StudyConfig`. The framework picks it up
+via `studies.load_study("openness_maneuvering")`.
+"""
+
+from __future__ import annotations
+
+from pathlib import Path
+
+import yaml
+
+from ..base import JudgmentRubric, RubricDimension, StudyConfig
+
+# Load the study's debriefing protocol overlay from disk at import
+# time. The dict gets handed to `StudyConfig.protocol_overlay` below;
+# the framework's debriefer-prompt builder merges it over the generic
+# `protocols/ethnographic_protocol.yaml` (deep-merge semantics in
+# `roles/qualitative_researcher_agent._apply_study_overlay`).
+_OVERLAY_PATH = Path(__file__).parent / "debriefing_overlay.yaml"
+_DEBRIEFING_OVERLAY: dict = yaml.safe_load(_OVERLAY_PATH.read_text()) or {}
+
+# Phase-5 handler registered into `StudyConfig.extra_phases` below.
+# The import is wrapped so that loading the study config can never
+# fail just because an optional orchestration module is unavailable
+# (e.g., in test harnesses that stub out parts of the codebase).
+# If the import succeeds, the openness study opts into Phase 5 via the
+# default rubric-anchored ensemble. If it fails, the study still loads
+# — the framework's `--judge` flag has a backup path that auto-injects
+# the handler when a study has a `judgment_rubric` but no registered
+# handler.
+try:
+    from ...orchestrator.construct_judging import ConstructJudgingPhase
+except ImportError:  # pragma: no cover  (script-style execution)
+    from orchestrator.construct_judging import ConstructJudgingPhase  # type: ignore[no-redef]
+
+
+# ---------------------------------------------------------------------------
+# Openness rubric — seven-dimensional Likert scale grounded in the
+# open-innovation + dynamic-capabilities literature. Used by the
+# Phase-5 openness-judge ensemble.
+#
+# History. v0.1 carried five dimensions (component_disclosure,
+# process_openness, boundary_permeability, ecosystem_orchestration,
+# value_capture_posture). v0.2 (this revision) makes two changes:
+#
+#   1. Split `boundary_permeability` into `boundary_permeability_inbound`
+#      and `boundary_permeability_outbound`. The single-axis version
+#      conflated two flows that firms almost always treat asymmetrically
+#      (e.g. publish heavily outbound while restricting inbound talent
+#      flows, or vice versa). The split is the standard Dahlander &
+#      Gann (2010) taxonomy of openness.
+#
+#   2. Add `temporal_openness_maneuvering`. The study's RQ explicitly
+#      asks how firms "maneuver" openness over time, but v0.1 scored a
+#      static snapshot. The new dimension captures the firm's reasoning
+#      about WHEN to open vs close (sequencing, phasing, conditionality)
+#      — the maneuvering construct itself rather than a frozen position.
+#
+# Both changes lift the rubric from "what posture does the firm hold
+# RIGHT NOW" to "how does the firm think about opening/closing as a
+# strategic move." Grounded in Henkel 2006 (dynamic selective
+# revealing), Alexy/Henkel/Wallin 2013, Lakhani & Tushman 2012,
+# Dahlander & Gann 2010.
+# ---------------------------------------------------------------------------
+
+_OPENNESS_RUBRIC = JudgmentRubric(
+    name="Openness in Open Innovation Strategy",
+    description=(
+        "Multi-dimensional rubric for the firm's openness posture in "
+        "open innovation ecosystems. Openness here is NOT a single "
+        "axis (open vs closed) but a vector across seven distinct "
+        "strategic surfaces, including a temporal-maneuvering "
+        "dimension that captures HOW the firm reasons about opening "
+        "and closing as a strategic move over time. Each judge scores "
+        "each dimension on a 1-7 Likert with verbatim evidence from "
+        "the firm's artefacts and the deliberation transcript."
+    ),
+    dimensions=[
+        RubricDimension(
+            key="component_disclosure",
+            name="Component disclosure",
+            description=(
+                "Degree to which the firm's technical components, "
+                "intellectual property, training data, model weights, "
+                "or API surfaces are revealed externally vs kept "
+                "proprietary. The judge should look at SPECIFIC "
+                "components the team discussed and ask: was each one "
+                "treated as proprietary, partially exposed, or fully "
+                "released?"
+            ),
+            anchor_low=(
+                "All components treated as proprietary. No external "
+                "disclosure beyond marketing communications. Weights, "
+                "data, and core IP are firm secrets."
+            ),
+            anchor_mid=(
+                "Mixed disclosure: some components opened (research "
+                "publications, model cards, partial API access), "
+                "others kept proprietary. Asymmetric treatment is "
+                "deliberate and discussed."
+            ),
+            anchor_high=(
+                "Aggressive component disclosure. Weights, training "
+                "data, methods, evaluation code all released. The "
+                "firm treats disclosure as strategic leverage, not "
+                "as IP leakage."
+            ),
+            literature="Henkel 2006 (selective revealing)",
+        ),
+        RubricDimension(
+            key="process_openness",
+            name="Process openness",
+            description=(
+                "Degree to which the firm's R&D, decision-making, or "
+                "development processes admit external participation. "
+                "Are external researchers, open-source contributors, "
+                "or partner firms welcomed into the actual work, or "
+                "treated as downstream consumers?"
+            ),
+            anchor_low=(
+                "Closed pipeline. All R&D happens internally. "
+                "External actors are customers, not collaborators."
+            ),
+            anchor_mid=(
+                "Selective collaboration: specific partnerships, "
+                "open-source releases of tooling, academic outreach "
+                "programs. External participation in some workstreams "
+                "but not others."
+            ),
+            anchor_high=(
+                "Open-by-default process. External contributors can "
+                "submit code, propose research directions, shape the "
+                "roadmap. The firm coordinates rather than controls."
+            ),
+            literature="Chesbrough 2003 (inbound open innovation)",
+        ),
+        RubricDimension(
+            key="boundary_permeability_inbound",
+            name="Boundary permeability — inbound",
+            description=(
+                "How freely knowledge, talent, or external influence "
+                "flows INTO the firm. Inbound channels include: hiring "
+                "researchers/engineers from competitors and academia, "
+                "absorbing open-source contributions into proprietary "
+                "stacks, sabbaticals taken at external organisations, "
+                "external advisors with privileged access, academic "
+                "visiting positions, citations and adoption of "
+                "external research, partner-firm secondments, and "
+                "willingness to be influenced by ecosystem actors' "
+                "design choices. The judge should look at SPECIFIC "
+                "inbound channels the team discussed."
+            ),
+            anchor_low=(
+                "Closed to inbound flow. NIH (not-invented-here) "
+                "posture; rare external hires into senior roles; "
+                "no absorption of outside ideas, talent, or open-"
+                "source work."
+            ),
+            anchor_mid=(
+                "Selective inbound permeability: hires from "
+                "academia/competitors in some functions but not "
+                "others; absorbs open-source components for "
+                "infrastructure but builds frontier capabilities "
+                "in-house; willing to be influenced by select "
+                "ecosystem actors."
+            ),
+            anchor_high=(
+                "Aggressive inbound openness. Active hiring from "
+                "academic + competitor talent pools; standing "
+                "advisory roles; routine absorption of external "
+                "ideas, code, and methods; firm sees outside "
+                "knowledge flow as competitive advantage."
+            ),
+            literature="Dahlander & Gann 2010 (openness taxonomy); Laursen & Salter 2006 (external search breadth)",
+        ),
+        RubricDimension(
+            key="boundary_permeability_outbound",
+            name="Boundary permeability — outbound",
+            description=(
+                "How freely knowledge, talent, or assets flow OUT of "
+                "the firm. Outbound channels include: research "
+                "publications, conference talks, open-source code "
+                "releases, model/data/weight releases, tolerated "
+                "employee departures to competitors, dual academic "
+                "affiliations for the firm's own researchers, "
+                "executive talks about strategy, willingness to "
+                "let internal innovations propagate into the "
+                "ecosystem. Distinct from inbound — firms often "
+                "publish heavily while restricting inbound flow, "
+                "or vice versa."
+            ),
+            anchor_low=(
+                "Closed to outbound flow. Rare publications; "
+                "strict NDAs and non-competes; no open-source "
+                "releases; departures treated as IP/talent "
+                "leakage rather than ecosystem health."
+            ),
+            anchor_mid=(
+                "Selective outbound: publishes research in some "
+                "areas but not others; releases tooling but not "
+                "frontier methods; tolerates academic-affiliation "
+                "side roles but with explicit IP boundaries."
+            ),
+            anchor_high=(
+                "Aggressive outbound openness. Frequent "
+                "publications and open-source releases; dual "
+                "affiliations encouraged; departures and ecosystem "
+                "propagation treated as influence and standard-"
+                "setting, not as leakage."
+            ),
+            literature="Dahlander & Gann 2010 (openness taxonomy); Alexy, Henkel & Wallin 2013 (selective revealing as strategic outbound)",
+        ),
+        RubricDimension(
+            key="ecosystem_orchestration",
+            name="Ecosystem orchestration",
+            description=(
+                "Whether the firm proactively shapes an ecosystem of "
+                "complements (developers, partners, regulators, "
+                "researchers) or operates as a closed pipeline. Hub "
+                "vs node posture: does the firm see itself as "
+                "coordinating an ecosystem or as an autonomous "
+                "competitor?"
+            ),
+            anchor_low=(
+                "Closed pipeline. The firm builds + sells; no active "
+                "ecosystem investment; partners are vendors or "
+                "customers, not co-creators."
+            ),
+            anchor_mid=(
+                "Some ecosystem investment (developer programs, "
+                "partner incentives) but the firm retains hard "
+                "control of the core. Selective rather than systemic."
+            ),
+            anchor_high=(
+                "Hub orientation. The firm actively cultivates and "
+                "coordinates an ecosystem of complementors. Its "
+                "value-capture strategy depends on the ecosystem's "
+                "health."
+            ),
+            literature="Jacobides, Cennamo & Gawer 2018",
+        ),
+        RubricDimension(
+            key="value_capture_posture",
+            name="Value capture posture",
+            description=(
+                "How the firm intends to monetise its position: via "
+                "control (closed monopolistic pricing, IP enforcement, "
+                "exclusionary partnerships) or via participation "
+                "(open-platform network effects, complementor "
+                "ecosystems, indirect monetisation)."
+            ),
+            anchor_low=(
+                "Pure control-based value capture: proprietary IP, "
+                "high switching costs, exclusionary contracts, "
+                "rent-extraction posture."
+            ),
+            anchor_mid=(
+                "Hybrid: some revenue from direct control (closed "
+                "premium offerings), some from network position "
+                "(platform fees, marketplace cuts)."
+            ),
+            anchor_high=(
+                "Participation-based value capture: dominant position "
+                "in an open network, network effects, the firm wins "
+                "by enabling the ecosystem rather than enclosing it."
+            ),
+            literature="Teece 2007 (microfoundations of dynamic capabilities)",
+        ),
+        RubricDimension(
+            key="temporal_openness_maneuvering",
+            name="Temporal openness maneuvering",
+            description=(
+                "How the firm reasons about the TIMING and SEQUENCING "
+                "of opening and closing — not where the firm sits "
+                "now, but how it thinks about MOVING. Captures: "
+                "phased rollouts ('closed Phase 1 → open Phase 3'), "
+                "conditional triggers ('open once standards "
+                "stabilise'), reversibility (planned re-closing "
+                "after a window of openness), explicit sequencing "
+                "logic across components ('this stays closed until "
+                "that opens'), competitive-timing arguments ('open "
+                "now before X commoditises'), and the firm's "
+                "treatment of openness as a TIME-VARIANT lever "
+                "rather than a fixed posture. The judge should look "
+                "for explicit reasoning about TIMING, ORDER, and "
+                "CONDITIONS — not just static commitments. A high "
+                "score requires the deliberation to engage WHEN to "
+                "move, not just WHETHER to be open."
+            ),
+            anchor_low=(
+                "No temporal reasoning. Openness treated as a "
+                "fixed posture. No discussion of phasing, "
+                "conditional triggers, sequencing, or "
+                "reversibility. The firm's openness is what it is, "
+                "with no articulated logic for when it would change."
+            ),
+            anchor_mid=(
+                "Some temporal awareness. Phased plans are "
+                "mentioned (e.g. 'Phase 1 gated, Phase 2 broader') "
+                "but the conditions, triggers, and reversibility "
+                "are not deeply reasoned. The firm sees openness "
+                "as evolvable but does not articulate the levers "
+                "that drive the change."
+            ),
+            anchor_high=(
+                "Explicit maneuvering logic. The firm articulates "
+                "WHEN it will open or close which components, on "
+                "what triggers, in what order, and with what "
+                "reversibility. Openness is treated as a temporal "
+                "strategy with named conditions ('open the API "
+                "once the safety eval suite hits X'; 're-close the "
+                "weights if competitor commoditisation threatens "
+                "moat'). The deliberation reveals the firm thinking "
+                "about openness as a sequence of strategic moves, "
+                "not a stance."
+            ),
+            literature=(
+                "Henkel 2006 (dynamic selective revealing); "
+                "Alexy, Henkel & Wallin 2013 (selective revealing "
+                "as deliberate sequencing); Lakhani & Tushman 2012 "
+                "(open innovation as temporally bounded strategy)"
+            ),
+        ),
+    ],
+)
+
+
+STUDY: StudyConfig = StudyConfig(
+    name="Strategic Maneuvering of Openness in Open Innovation Ecosystems",
+    slug="openness_maneuvering",
+    # v0.4.0 (PR-D, 2026-05-25). The construct judges now score at
+    # sub-dimension granularity (26 sub-dims) on a native 0-100 percent
+    # scale, with a Likert back-bin computed for reviewer-compatible
+    # reporting and Krippendorff's α computed at both granularities.
+    # Every sub-dim score requires ≥2 evidence quotes sourced
+    # exclusively from the run's persisted markdown — substring-
+    # verified post-hoc, fail rates surfaced in
+    # `05_judging/<provider>_quote_audit.md`. The rubric's seven
+    # parent dimensions and their literature anchors are unchanged
+    # from v0.3 — the change is at the measurement-layer level
+    # (finer-grained + continuous + evidence-quoted), not the
+    # construct-definition level.
+    #
+    # Replay tool refuses to score a v0.3-captured run under v0.4 code
+    # (and vice versa) without `--allow-version-mismatch` — this
+    # version bump is the schema lock that protects α statistics
+    # from silent cross-version pollution.
+    #
+    # v0.3 → v0.4 backwards compatibility:
+    # * v0.3 ConstructAssessment payloads validate cleanly (sub-dim
+    #   field defaults to []); persistence skips the audit step on
+    #   v0.3 assessments; aggregator omits the per-sub-dim sections.
+    # * The recovered Meta-2032 bundle stays as a v0.3 baseline and
+    #   should not be replayed under v0.4.
+    # v0.5.0: research question matches the proposal (DECISIONS §43).
+    version="0.5.0",
+
+    # RQ revised 2026-05-25 (v0.2 → v0.3). The v0.2 wording
+    # ("How do firms shift or strategically maneuver their degree of
+    # openness (how open they are at a given point) in open innovation
+    # ecosystem for value capture.") pre-committed two analytical
+    # decisions that an inductive study should leave open:
+    #
+    #   1. The parenthetical "(how open they are at a given point)"
+    #      embedded a static-snapshot framing of openness — directly
+    #      contradicting the dynamic-maneuvering construct the rubric's
+    #      v0.2 update (temporal_openness_maneuvering dimension) was
+    #      added to capture.
+    #
+    #   2. The "for value capture" outcome clause pre-named the
+    #      strategic purpose firms maneuver toward. The v1.0
+    #      CrewAI pilot identified value capture as the salient
+    #      outcome; the more rigorous virtual-ethnography simulation
+    #      should be free to surface other purposes (legitimacy,
+    #      safety, ecosystem health) as findings rather than assume
+    #      value capture upfront.
+    #
+    # Crucially, the v0.2 RQ also did NOT name the two mechanisms
+    # (technological re-architecture, governance tuning) that the v1.0
+    # CrewAI pilot identified — but earlier-draft RQs DID. The v0.3
+    # wording deliberately keeps the RQ free of mechanism naming so
+    # the new study can rediscover those mechanisms (replication),
+    # refine them, supersede them, or surface different ones entirely.
+    # See DECISIONS.md Session 3 entry for full rationale.
+    #
+    # v0.5.0 restores the outcome clause, so the runs ask what the proposal
+    # asks. The researcher sees this question and the panel never does; the
+    # debrief still records purposes other than value (DECISIONS §43).
+    research_question=(
+        "How do firms maneuver openness to create and capture value?"
+    ),
+
+    # This text reaches the Debriefer. The sensitising literature (selective
+    # revealing, Henkel 2006; dynamic capabilities, Teece, Pisano & Shuen 1997;
+    # ecosystem shaping, Jacobides, Cennamo & Gawer 2018) is for the analysis
+    # after the run, so it is not spelled out here.
+    theoretical_lens=(
+        "Inductive. Concepts are developed after the run from what the "
+        "panel did and said."
+    ),
+
+    debriefer_background_block=(
+        "Anchor each probe on items that the panel ITSELF named — "
+        "specific products, processes, or decisions — in the panel's "
+        "own words."
+    ),
+
+    # Study-specific construct vocabulary. Merged with the universal
+    # `methodological_forbidden_vocabulary` from the protocol YAML at
+    # runtime. The framework presents the merged list to the
+    # researcher as one list — researcher does not know which words
+    # come from which subset.
+    construct_forbidden_vocabulary=[
+        "open",
+        "closed",
+        "open-source",
+        "closed-source",
+        "liberalization",
+        "enclosure",
+        "modular",
+        "boundary",
+        "value capture",
+        "architectural leverage",
+        "asset orchestration",
+        "openness",
+        "open-sourced",
+        "open-sourcing",
+        "open-weight",
+        "open-weights",
+        "proprietary",
+        "disclose",
+        "disclosure",
+        "selective revealing",
+        "outsider",
+        "outsiders",
+    ],
+
+    # Glossary watch-list. If panellists use any of these
+    # SPONTANEOUSLY, log them in `flagged_vocabulary_used`. The
+    # researcher never asks why. Same list as construct_forbidden_
+    # vocabulary by default — words the construct's literature
+    # uses, that panellists shouldn't be prompted with but should
+    # be captured if surfaced organically.
+    flagged_vocabulary=[
+        "open",
+        "closed",
+        "open-source",
+        "closed-source",
+        "liberalization",
+        "enclosure",
+        "modular",
+        "boundary",
+        "value capture",
+        "architectural leverage",
+        "asset orchestration",
+        "openness",
+        "open-sourced",
+        "open-sourcing",
+        "open-weight",
+        "open-weights",
+        "proprietary",
+        "disclose",
+        "disclosure",
+        "selective revealing",
+        "outsider",
+        "outsiders",
+    ],
+
+    scenario_brief="An AI firm operating in a competitive industry.",
+
+    strategic_question_template=(
+        "What should we, as a leadership team, develop and bring to "
+        "market next? The scope is {direction_hint}. Surface the "
+        "directions worth considering given our industry context "
+        "and firm position, evaluate them, converge on a "
+        "recommendation, and then propose how to take it forward."
+    ),
+
+    # No per-study overrides for roles or contexts; the framework's
+    # default factories work fine for this study.
+    role_factories_module=None,
+    contexts_module=None,
+    protocol_overlay=_DEBRIEFING_OVERLAY,
+
+    # Phase-5 construct-judge rubric. See _OPENNESS_RUBRIC above.
+    judgment_rubric=_OPENNESS_RUBRIC,
+
+    # Opt into Phase 5. The framework's default rubric-anchored
+    # judge ensemble. A different study could register a
+    # different `PhaseHandler` here (or none) without framework
+    # changes.
+    extra_phases=[ConstructJudgingPhase()],
+
+    # RAG corpus loader for the openness study. Resolved at session
+    # start when the CLI's `--rag` flag is set. Looks up the Vertex
+    # corpus named `openness_maneuvering__<Company>` (built ahead of
+    # time via `python -m rag.corpus_build`). Returns None for any
+    # company whose corpus hasn't been populated yet, and a `--rag`
+    # run then stops with an error.
+    rag_corpus_loader="studies.openness_maneuvering.rag_loader:load_corpus",
+)

@@ -1,0 +1,200 @@
+This glossary explains the terms used in this repository for readers who know organization theory and qualitative method but not software or machine learning. Each entry gives a plain definition, and a second sentence where the term means something particular in this project.
+
+## AI basics
+
+- **LLM (large language model), or language model.** A program trained on vast amounts of text to write likely continuations of the text it receives.
+- **Model.** Short for language model. In this repository it almost never means a statistical or theoretical model.
+- **Training.** The process, finished before we use a model, in which it learned patterns from text. What it absorbed then stays with it, and no prompt can remove it.
+- **Prompt.** The text sent to a model to get one reply. Here a prompt holds role instructions, the task and any earlier records the agent needs.
+- **Instruction, or system prompt.** Standing text that tells a model who it is and how to behave.
+- **Model call.** One prompt sent to a model and one reply back. A full run makes roughly 200.
+- **Token.** A small piece of text, often about three-quarters of a word, that models read and write and providers charge by.
+- **Input and output.** The text sent to a model and the text it returns, which are counted and priced separately.
+- **Context window.** The most text a model can take in during one call. Also called the context limit.
+- **Agent.** A language model given a name, a role and instructions. Here an agent only writes text, and the framework carries out everything else.
+- **Role agent.** One of the six simulated executives: CEO, CTO, COO, CMO, Product Strategist and Product Designer.
+- **Researcher agent.** The seventh agent, which watches and questions the team. It is one persona set up three ways, sometimes called shells: observer, field noter and debriefer.
+- **Provider.** The company or service that supplies a model. In settings such as `TMT_PROVIDER`, it also means the choice of model.
+- **Gemini, Claude, GPT, DeepSeek, Llama, Qwen.** Language models from Google, Anthropic, OpenAI, DeepSeek, Meta and Alibaba, in that order.
+- **Frontier model.** One of the newest and most capable models a company offers.
+- **Open-weight.** A model whose trained numbers are published so anyone can run it, though its training text may stay private. The defaults here are Llama and Qwen.
+- **Preview model.** An early release that the provider may still change or withdraw. Our four prototype runs used `gemini-3.1-pro-preview`.
+- **GA (generally available).** A provider's finished, fully supported release of a model.
+- **Stochastic.** Involving chance, so the same prompt can produce a different reply each time. This is why one run counts as one sample.
+- **Temperature.** A setting for how much chance affects a model's word choice. The framework sets no value, so each provider's default applies.
+- **Reasoning, or thinking output.** Working-out text some models produce before replying, which is billed as output.
+- **Reasoning trace.** A saved copy of that working-out. Saving it is planned, so current records do not hold it.
+- **Structured output.** A reply forced into fixed, named fields rather than free text.
+- **Hallucination.** Confident model text with no basis in its sources or in fact.
+
+## How a run works
+
+- **Framework.** The shared software in this repository, which any study can use. Here it does not mean a conceptual framework.
+- **In silico.** Carried out by computer rather than in the field.
+- **Ethnography in silico.** This project's method: agents simulate a team, a researcher agent observes and debriefs them, and human researchers code the records.
+- **Study.** A folder under `studies/` that supplies the research question, decision task, debrief topics and, optionally, a corpus. The first is `openness_maneuvering`.
+- **Slug.** A short name with no spaces used in folder names, such as `openness_maneuvering`.
+- **Run, or research session.** One complete simulated meeting and debrief for one scenario, saved in its own folder.
+- **Scenario.** The setting of a run: one firm, one industry context and one product type.
+- **Condition.** A scenario setting with fixed wording: industry `Dynamic` or `Stable`, product `Novel` or `Enhancement`.
+- **Cell.** One combination of firm, industry context and product type. Five firms, two contexts and two product types give 20 cells.
+- **Sweep.** A planned set of runs across many cells or models.
+- **Pilot.** The earlier study that preceded this framework, built on different software (CrewAI) and held in its own repository.
+- **Prototype runs (A to D).** Four test runs simulating one firm, used for learning about the method. They are not study results.
+- **TMT (top management team).** A firm's senior executive group. Here it means the six role agents, and `TMT_` starts many setting names.
+- **RQ (research question).** The question a study asks. It is withheld from the team, and by default from the observer.
+- **Lens, or theoretical lens.** The theory a study will analyze through. Of the team and researcher agents, only the debriefer is told it.
+- **PI (principal investigator).** The lead researcher, meaning the human running the study.
+- **Phase.** A numbered stage of a run: 1 deliberation, 2 strategy documents, 3 observation summary, 4 debrief, then optional study extras.
+- **Deliberation.** Phase 1, in which the team discusses the decision task and every public move is recorded.
+- **Concurrent mode.** The default of five deliberation modes, in which all six roles act at once rather than in a fixed order.
+- **Stop rule.** The condition that ends a discussion, such as a time limit or every role declaring itself finished.
+- **Action.** One move by a role in the deliberation, produced by one model call.
+- **SPEAK, ASK, ANSWER.** Actions that add to the public transcript, put a question to one colleague, and reply to such a question.
+- **SCRATCHPAD, DRAFT, DONE.** Actions that write a private note, update the role's document draft, and declare the role finished.
+- **PASS.** A reply meaning the agent has nothing to add. The records treat it as silence, which differs from a failed call.
+- **Private channel.** Each role's notes, draft and inbox, hidden from other roles and saved in `06_private_channel/`.
+- **Inbox.** The questions colleagues have sent a role privately, waiting for an answer.
+- **Channel.** One of four kinds of record in a run: public, private, researcher and source.
+- **Artefact.** Something made. Here it usually means a role's strategy document, though some documents use it for any saved record.
+- **Strategy document.** The paper each role writes in Phase 2, such as a board memo from the CEO.
+- **Observer.** The researcher agent in Phase 3, when it consolidates everything it saw into one summary.
+- **Field noter.** The researcher agent during Phases 1 and 2, when it writes notes without intervening.
+- **Debriefer.** The researcher agent in Phase 4, when it questions the team.
+- **Field notes.** Running notes written during the first two phases, about once every ten events, and saved in `03_researcher/`.
+- **Observation summary.** The observer's single structured account of the deliberation, written in Phase 3.
+- **Blind observation.** The default, in which the observer and field noter are not told the research question or lens. They still receive word lists, so blindness is partial.
+- **Embedded observation.** A study's alternative, in which the observer and field noter know the research question but never the lens.
+- **Debrief, or debriefing.** Phase 4, in which the researcher agent interviews the whole team. Its transcript sits in `04_interview/`.
+- **Panel, panelist.** The six role agents, and any one of them, when being questioned in the debrief.
+- **Exchange.** One researcher question and the replies to it. A debrief stops at 20 exchanges by default, unless the debriefer ends it sooner.
+- **Follow-up.** A debrief question that pursues the answer just given.
+- **New question, or emerging question.** A research question the debriefer records as arising from the debrief, for human researchers to weigh.
+- **Cross-talk.** A debrief reply from a role that joins in after a first reply, rather than being the one asked.
+- **Protocol.** The debrief's rules and topics, kept in `protocols/ethnographic_protocol.yaml`.
+- **Thematic area.** One topic of the debrief protocol, labeled A to J.
+- **Overlay.** A study's own debrief topics, merged on top of the shared protocol.
+- **Steering.** Wording that leads agents toward what a study hopes to find.
+- **Forbidden vocabulary.** Words the researcher agent must not use in its own writing unless quoting a panelist.
+- **Flagged vocabulary.** Words the researcher agent logs word for word when panelists use them unprompted.
+- **Session.** In agent software, a stored conversation that is re-sent to the model with each new prompt. Here each model call gets its own empty session.
+- **Memory.** Earlier records copied into each prompt. Models keep nothing between calls here, so a role remembers only what its prompt holds.
+- **Runner.** The software part that hands a prompt to an agent and collects the reply.
+- **Batch runner.** A planned tool for starting many runs in one go.
+- **A2A (agent-to-agent).** A method for agents to call each other over a network. It was removed, and survives in names such as `TMTSystemWithA2A`.
+- **Rate limit.** A provider's cap on how much a customer may send per minute. A rate-limit failure usually shows as error code 429.
+- **TPM, RPM.** Tokens per minute and requests per minute, the two usual rate limits.
+- **Timeout.** Giving up on a model call after waiting too long.
+- **Retry, backoff.** Trying a failed call again, and waiting longer before each new attempt.
+- **List price.** A provider's published rate per million tokens. Costs in these documents use list prices.
+- **Cached tokens.** Repeated input text the provider charges less for, because it recently processed the same text.
+- **Long-context rate.** Google's higher price for a whole call once its input passes 200,000 tokens.
+
+## Retrieval
+
+- **RAG (retrieval-augmented generation).** Searching a document collection and adding the passages found to a model's prompt before it writes.
+- **Retrieval.** The search step. Here the framework searches before a role's model call, normally taking five passages, and only role agents get them.
+- **Query.** The text a search uses. Here it comes from the role, the task and the transcript, never the research question.
+- **Grounding.** Giving agents a firm's real documents so their text can be traced to sources. It is unrelated to grounded theory and does not prove truth.
+- **Grounded run.** A run with `--rag`, in which roles receive and cite passages. An ungrounded run has no documents.
+- **Corpus.** A collection of documents. Here it means 127 public documents on five firms: 73 interviews, 49 earnings calls and 5 case studies.
+- **Corpus store.** A firm's corpus as loaded into Google's cloud service for searching. So far one store has been built, from OpenAI's 37 documents.
+- **Source list.** `rag_corpora/SOURCES.csv`, which lists every document and its fingerprint, because the documents themselves may be under copyright.
+- **Chunk, passage, excerpt, snippet.** A piece cut from a document for searching. Stored passages here run about 750 words, each overlapping the next.
+- **Chunking.** Cutting documents into such pieces, here about 1,024 tokens long with 200 tokens of overlap.
+- **Shown characters.** How much of each passage agents actually see. In run D it was the first 1,200 characters; agents now see whole passages.
+- **Citation.** A role's record of the document, passage and words it drew on. A verified citation matches the document, not what anyone truly said.
+- **Embedding.** A list of numbers standing for a text's meaning, so that texts alike in meaning get similar numbers.
+- **Embedding model.** A model that turns text into those numbers. Here it is Google's `text-embedding-005`, which produces 768 numbers per text.
+- **Vector.** Another name for a list of numbers such as an embedding.
+- **Vector database, or vector store.** A store that keeps embeddings and finds those closest to a search. A local option is planned.
+- **KNN (k-nearest neighbors).** A search that compares a query with every stored item and returns the closest few. The store here uses this.
+- **ANN (approximate nearest neighbors).** A faster search that takes shortcuts and can miss some closest items. The store here does not use it.
+- **Cosine similarity.** A score of how alike two lists of numbers are, where values near 1 mean very alike.
+- **Cosine distance.** The reverse score, where lower means closer. Retrieval scores in the build record appear to be these.
+- **TF-IDF (term frequency, inverse document frequency).** A way of weighting words so that those common across all the texts count for less. Here it measures shared wording, not meaning.
+- **Semantic.** To do with meaning rather than exact words. Scores from embeddings run much higher than scores from wording, so the two cannot be compared directly.
+- **RAG Engine.** Google's paid service that stores a corpus and runs the searches.
+- **Spanner.** The Google database behind the corpus store, which bills for as long as the store exists.
+- **Tier.** A price level for that database: Basic costs about $3 a day, Scaled about $30, and Unprovisioned stops it.
+- **Region.** The geographic location of the rented computers, set for retrieval with `RAG_LOCATION`.
+- **Endpoint.** The web address at which a service receives requests.
+
+## Records and checks
+
+- **Run folder.** The folder a run writes under `results/runs/`, with numbered subfolders and a `README.md` to start from.
+- **Log.** A running record written by software as it works.
+- **Interaction log.** The saved record of the deliberation's public moves, in `01_deliberation/`.
+- **Hash, SHA-256.** A short fingerprint computed from a file's contents, so any change alters it. SHA-256 is the standard method used here.
+- **Manifest.** A file listing what produced something. Here `manifest.json` records each role's model, the code version, settings and hashes of what agents are told.
+- **`00_meta.json`.** A run's summary file, holding its scenario, models, code version, total tokens and list cost.
+- **Provenance.** The record of where something came from. Here `analysis/provenance.py` credits each three-word phrase in a debrief answer to its earliest source.
+- **Redaction.** Removing protected text from a copy of records. In run D, source text became hashes and word counts.
+- **Masking.** Hiding names or words so that a model or test cannot use them.
+- **Invariant, or safeguard.** A rule that must always hold. Here five rules (I1 to I5) keep the research question from steering what agents do.
+- **Unit test.** A small automatic check that one part of the code behaves as intended. Here unit tests need no keys and cost nothing.
+- **Live test.** A test that calls real models and costs money. It runs only with `--run-live`.
+- **Smoke test.** A quick first run to confirm that nothing breaks outright.
+- **Stub, or stand-in.** A simple substitute for a model or other software, giving set replies so that tests run free.
+- **Fixture.** A prepared input that tests run on. The study fixtures are the openness study and an invented study, `_test_alt`.
+- **Dry run.** A rehearsal of a whole run with a stand-in for the model and no cost. It checks that the parts connect and how large calls are, not behavior.
+- **Replay.** Running one later stage again from a saved run. The model writes new text, so nothing is played back.
+- **Short check.** A live run capped at few actions and exchanges, to test that the parts connect and what they cost. It is not data.
+- **Panel probe.** A test that puts one saved run's group questions to each role twice, under three conditions. In qualitative use, "probe" means a follow-up question.
+- **Text classifier.** A simple program that guesses a label from words. Here it guesses which role wrote an answer.
+- **Permutation test.** A significance test that reshuffles or flips the data many times rather than assuming a distribution.
+- **Lexicon, or dictionary method.** Scoring text by counting words from a fixed list tied to a concept.
+- **Judge.** A model that scores a finished run against a rubric. Four can run, only with `--judge`, and this scoring sits outside the proposal's method.
+- **Rubric.** A scoring guide saying what to rate and how. Here only judges use it, not human coders.
+- **Sub-dimension.** One of 26 narrow items within the openness rubric's seven dimensions.
+- **Likert.** A numbered rating scale. Rubrics here are defined on 1 to 7, and openness judges score 0 to 100, then convert.
+- **Krippendorff's alpha (α).** A measure of agreement among coders, where 1 is perfect and 0 is chance. Here it compares judge models.
+- **Quote verification.** Checking that a quoted phrase appears word for word in the record it names.
+- **Run register.** A planned list of every run, including failed ones and why they failed.
+
+## Software and journal shorthand
+
+- **Python.** The programming language this project is written in.
+- **Package.** A bundle of ready-made code that a program can use.
+- **pip.** The tool that installs Python packages, using the list in `requirements.txt`.
+- **Virtual environment (`.venv`).** A private folder of packages, kept apart from the rest of the computer.
+- **Script.** A short program, usually run from the command line, such as those in `scripts/`.
+- **Module.** A Python file or folder of code with one job.
+- **CLI (command-line interface), or command line.** Using a program by typing commands rather than clicking.
+- **Shell, or terminal.** The window and program in which commands are typed. Researcher "shells" are something else, explained under researcher agent.
+- **Flag.** An option added to a command, such as `--rag` or `--judge`.
+- **Environment variable.** A named setting held outside the code, such as `TMT_PROVIDER`.
+- **API (application programming interface).** The agreed way one program asks another for a service. Here it is how the framework reaches models.
+- **API key.** A secret code that identifies who is using a service and who pays. Keep it in `.env.local`, never in the repository.
+- **SDK (software development kit).** A toolkit from a company for using its service.
+- **ADK (Agent Development Kit).** Google's ready-made software for building agents, on which this framework is built.
+- **LiteLLM.** Software that lets one program reach many providers' models in the same way. Here it serves models other than Gemini.
+- **CrewAI.** Other software for building teams of agents, used in the pilot but not in this framework.
+- **Groq.** A company that hosts open-weight models, here Llama. It is a different product from Grok.
+- **Ollama.** Software for running open-weight models on your own computer.
+- **Vertex AI.** Google's paid cloud service offering models, embeddings and RAG Engine.
+- **GCP (Google Cloud Platform).** Google's rented computing services, also called Google Cloud.
+- **Repository, or repo.** A project's folder of files together with its full history of changes.
+- **git.** The tool that keeps that history. "Gitignored" files are deliberately left out of the shared repository.
+- **Commit.** One saved change in the history, with its own hash, so a run can name its exact code version.
+- **Tag.** A fixed name for one commit. `v2.0` marks the version the proposal describes.
+- **Branch, `main`.** A separate line of work in the history, and the principal line.
+- **PR (pull request).** A proposed set of changes, reviewed before joining the main line. `DECISIONS.md` cites some by number.
+- **Clone.** A full copy of a repository on your own computer.
+- **Schema.** A template saying which fields a reply or record must contain.
+- **Pydantic.** A Python tool that checks replies and records against a schema.
+- **JSON, JSONL.** Plain-text formats for structured data as named fields. JSONL puts one record on each line.
+- **YAML.** A plain-text format for settings and lists that people can read easily.
+- **CSV (comma-separated values).** A plain-text table that any spreadsheet can open.
+- **Markdown (`.md`).** Plain text with simple marks for headings and lists, used for these documents and readable run records.
+- **Regex (regular expression).** A written pattern for finding text. The word-list tests use them.
+- **Harness.** A small program that runs something repeatedly under set conditions, such as a comparison.
+- **L1 to L17, `§`, P1 to P3.** Numbered learnings in `docs/LEARNINGS.md`, numbered entries in `DECISIONS.md`, and priority levels in `ROADMAP.md`.
+- **ASQ.** *Administrative Science Quarterly*. This and the journal abbreviations below appear in citations in code comments, mainly `roles/context_definitions.py`.
+- **SMJ.** *Strategic Management Journal*.
+- **JM.** *Journal of Marketing*.
+- **JMR.** *Journal of Marketing Research*.
+- **JOM.** *Journal of Operations Management*.
+- **JPIM.** *Journal of Product Innovation Management*.
+- **BIT.** *Behaviour & Information Technology*.
+- **NPD.** New product development.

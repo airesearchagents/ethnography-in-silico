@@ -1,0 +1,20 @@
+{
+  "run": {
+    "answers": 63,
+    "sentences": 365,
+    "answer_similarity": {
+      "different_roles_other_questions": 0.744,
+      "different_roles_same_question": 0.864,
+      "same_role_other_questions": 0.771
+    },
+    "idea_coverage_at_0.8": {
+      "different_roles_same_question": 0.094
+    },
+    "topic_overlap": {
+      "between_roles": 0.901,
+      "same_role_repeat": null,
+      "topics_clustered": 12,
+      "share_of_a_role_in_its_top_3_topics": 0.468
+    }
+  }
+}

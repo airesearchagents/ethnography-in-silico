@@ -1,0 +1,62 @@
+{
+  "baseline": {
+    "answers": 48,
+    "sentences": 306,
+    "answer_similarity": {
+      "different_roles_other_questions": 0.771,
+      "different_roles_same_question": 0.84,
+      "same_role_other_questions": 0.791,
+      "same_role_repeat": 0.908
+    },
+    "idea_coverage_at_0.8": {
+      "different_roles_same_question": 0.077,
+      "same_role_repeat": 0.339
+    },
+    "topic_overlap": {
+      "between_roles": 0.782,
+      "same_role_repeat": 0.893,
+      "topics_clustered": 12,
+      "share_of_a_role_in_its_top_3_topics": 0.488
+    }
+  },
+  "isolated": {
+    "answers": 48,
+    "sentences": 301,
+    "answer_similarity": {
+      "different_roles_other_questions": 0.767,
+      "different_roles_same_question": 0.844,
+      "same_role_other_questions": 0.784,
+      "same_role_repeat": 0.914
+    },
+    "idea_coverage_at_0.8": {
+      "different_roles_same_question": 0.1,
+      "same_role_repeat": 0.323
+    },
+    "topic_overlap": {
+      "between_roles": 0.747,
+      "same_role_repeat": 0.91,
+      "topics_clustered": 12,
+      "share_of_a_role_in_its_top_3_topics": 0.534
+    }
+  },
+  "mixed": {
+    "answers": 48,
+    "sentences": 310,
+    "answer_similarity": {
+      "different_roles_other_questions": 0.757,
+      "different_roles_same_question": 0.836,
+      "same_role_other_questions": 0.781,
+      "same_role_repeat": 0.898
+    },
+    "idea_coverage_at_0.8": {
+      "different_roles_same_question": 0.06,
+      "same_role_repeat": 0.212
+    },
+    "topic_overlap": {
+      "between_roles": 0.779,
+      "same_role_repeat": 0.9,
+      "topics_clustered": 12,
+      "share_of_a_role_in_its_top_3_topics": 0.489
+    }
+  }
+}

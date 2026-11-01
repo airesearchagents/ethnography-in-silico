@@ -1,0 +1,444 @@
+"""
+Common context definitions for industry context and product type.
+Used across all role agents to avoid code duplication.
+
+-------------------------------------------------------------------------------
+HOW THESE DEFINITIONS MAP TO PEER-REVIEWED CONSTRUCTS
+-------------------------------------------------------------------------------
+The INDUSTRY_CONTEXT_*_BASE strings intentionally use vocabulary from
+empirical organization-strategy work on environmental dynamism (rate and
+predictability of change in the task environment). The PRODUCT_TYPE_*_BASE
+strings map to the fluid vs specific industry innovation model and to
+incremental vs architectural product change.
+
+Industry: Dynamic vs Stable (primary anchors)
+
+- Dess, G. G., & Beard, D. W. (1984). Dimensions of organizational task
+  environments. Administrative Science Quarterly, 29(1), 52–73.
+  Defines environmental dynamism (among munificence and complexity) as the
+  combination of the rate of environmental change and the unpredictability
+  of that change. Our "Dynamic" label ≈ higher dynamism; "Stable" ≈ lower
+  dynamism (not "no change," but slower/more forecastable shifts).
+
+- Duncan, R. B. (1972). Characteristics of organizational environments and
+  perceived environmental uncertainty. Administrative Science Quarterly,
+  17(3), 313–327.
+  Supports interpreting dynamic settings as higher perceived environmental
+  uncertainty (less structured information for decisions).
+
+- Teece, D. J., Pisano, G., & Shuen, A. (1997). Dynamic capabilities and
+  strategic management. Strategic Management Journal, 18(7), 509–533.
+  Motivates sensing, seizing, and reconfiguring under more dynamic
+  environments.
+
+- Eisenhardt, K. M., & Martin, J. A. (2000). Dynamic capabilities: What are
+  they? Strategic Management Journal, 21(10–11), 1105–1121.
+  Clarifies dynamic capabilities as identifiable strategic/organizational
+  processes (e.g. alliancing, product development) whose value is
+  context-dependent.
+
+Role-specific "considerations" blocks inside ``get_industry_context_guidance``
+are still short syntheses for prompting; each ``if role_perspective`` branch
+has a # Cites: comment in code tying it to named papers (see inline).
+
+Product: Novel vs Enhancement (primary anchors)
+
+- Abernathy, W. J., & Utterback, J. M. (1978). Patterns of industrial
+  innovation. Research Policy, 7(2), 121–147.
+  Fluid phase (product/market experimentation) vs specific phase
+  (dominant design, incremental process/product improvement).
+
+- Henderson, R. M., & Clark, K. B. (1990). Architectural innovation: The
+  reconfiguration of existing product technologies and the failure of
+  established firms. Administrative Science Quarterly, 35(1), 9–30.
+  Incremental vs architectural innovation (component knowledge vs
+  linkages between components). "Novel" can include architectural or more
+  fundamental shifts; "Enhancement" aligns with incremental component-level
+  change retaining established linkages.
+
+- Jansen, J. J. P., Van Den Bosch, F. A. J., & Volberda, H. W. (2006).
+  Exploratory innovation, exploitative innovation, and performance: Effects of
+  organizational antecedents and environmental moderators.
+  Strategic Management Journal, 27(11), 1081–1094.
+  Informal parallel: exploratory (search, new capabilities) vs
+  exploitative (refinement, existing capabilities) innovation—useful for
+  interpreting Novel vs Enhancement in organizational terms.
+
+If you extend this module, keep # Cites: comments next to new bullets.
+Construct-specific vocabulary (e.g. openness, absorptive capacity) lives
+in `studies/<slug>/__init__.py`, not here.
+-------------------------------------------------------------------------------
+"""
+
+
+# ====================
+# Industry Context Definitions
+# ====================
+# Informed by environmental dynamism / stability literature (see module docstring).
+
+# Cites: Dess & Beard (1984, ASQ) environmental dynamism; Duncan (1972, ASQ)
+# perceived uncertainty; Teece et al. (1997, SMJ) dynamic capabilities.
+INDUSTRY_CONTEXT_DYNAMIC_BASE = """
+- High environmental dynamism: relatively high rate of change in the task
+  environment together with substantial unpredictability about the direction of
+  that change.
+- Higher perceived environmental uncertainty: decisions must be made with
+  less structured, less complete information about customers, competitors, and
+  technology.
+- Competitive and technological shifts that reward sensing, seizing, and
+  reconfiguring organizational resources.
+"""
+
+# Cites: Dess & Beard (1984, ASQ) lower dynamism; complements Eisenhardt &
+# Martin (2000) on more stable contexts where dynamic capabilities may resemble
+# best practices.
+INDUSTRY_CONTEXT_STABLE_BASE = """
+- Lower environmental dynamism: slower rates of environmental change and
+  comparatively greater predictability of shifts in customers, competitors,
+  and technology.
+- Lower perceived environmental uncertainty: more structured information and
+  established cause–effect beliefs about the task environment.
+- Emphasis shifts toward efficiency, reliability, and refinement within a
+  comparatively stable competitive and technological regime.
+"""
+
+
+# ====================
+# Product Type Definitions
+# ====================
+# Informed by incremental vs more fundamental innovation literature (see module docstring).
+
+# Cites: Abernathy & Utterback (1978, Research Policy) fluid phase;
+# Henderson & Clark (1990, ASQ) architectural / non-incremental change;
+# Jansen et al. (2006, SMJ) exploratory innovation.
+PRODUCT_TYPE_NOVEL_BASE = """
+- Closer to the fluid phase of industry innovation: considerable uncertainty
+  about product form, dominant design, and process configuration before the industry
+  settles on a dominant design.
+- Product and technology change that may reconfigure linkages among established
+  components or challenge the dominant design (architectural and related
+  non-incremental innovation).
+- Organizational emphasis on exploratory learning and new capabilities:
+  search, experimentation, and higher outcome variance.
+"""
+
+# Cites: Abernathy & Utterback (1978) specific phase; Henderson & Clark (1990)
+# incremental innovation; Jansen et al. (2006) exploitative innovation.
+PRODUCT_TYPE_ENHANCEMENT_BASE = """
+- Closer to the specific phase after dominant design: product and process
+  trajectories are better understood; innovation emphasizes refinement and
+  cost/quality improvement.
+- Predominantly incremental innovation that preserves established linkages
+  among core components.
+- Organizational emphasis on exploitative learning and refinement: leverage
+  of existing knowledge bases and more predictable performance implications.
+"""
+
+
+# ====================
+# Role-Specific Context Builders
+# ====================
+
+def get_industry_context_guidance(industry_context: str, role_perspective: str) -> str:
+    """
+    Get industry context guidance for a specific role perspective.
+
+    Role-specific bullet blocks are short syntheses for prompting. Each
+    branch is tagged in code with ``# Cites:`` pointing to peer-reviewed
+    sources (see inline comments below).
+
+    Args:
+        industry_context: "Dynamic" or "Stable"
+        role_perspective: "strategic", "technical", "operational", "market", "product_strategy", "product_design"
+
+    Returns:
+        Formatted context guidance string
+    """
+    if industry_context.lower() == "dynamic":
+        base = INDUSTRY_CONTEXT_DYNAMIC_BASE
+        
+        if role_perspective == "strategic":
+            # Cites: Bourgeois & Eisenhardt (1988, ASQ) fast-paced decision making
+            # in high-velocity environments; Miller & Friesen (1983, SMJ) strategy
+            # in varying environments (alignment themes).
+            considerations = """
+Strategic considerations:
+- Speed to market is often critical - first-mover advantages matter
+- Flexibility and adaptability are essential
+- Competitive positioning requires constant vigilance
+- Innovation cycles are compressed
+- Risk-taking may be necessary to stay ahead
+- Partnerships and ecosystems can provide competitive moats"""
+        elif role_perspective == "technical":
+            # Cites: Henderson & Clark (1990, ASQ); Sanchez & Mahoney (1996, SMJ)
+            # modularity, flexibility, knowledge management in product design.
+            considerations = """
+Technical considerations:
+- Rapid technology evolution requires flexible, adaptable architectures
+- Need for quick pivots and technology stack changes
+- Modular, decoupled systems enable faster innovation
+- Technical debt must be managed but speed often takes priority
+- Emerging technologies and standards require continuous evaluation
+- Scalability and performance under uncertainty are critical"""
+        elif role_perspective == "operational":
+            # Cites: Gupta, Raj, & Wilemon (1986, Journal of Marketing) R&D-marketing
+            # integration; Jansen et al. (2006, SMJ) cross-functional coordination.
+            considerations = """
+Operational considerations:
+- Need for agile, flexible operational processes
+- Rapid scaling and resource reallocation capabilities
+- Fast decision-making and execution cycles
+- Cross-functional collaboration under time pressure
+- Operational resilience to handle uncertainty
+- Ability to pivot operations quickly"""
+        elif role_perspective == "market":
+            # Cites: Jaworski & Kohli (1993, JMR) market dynamism as moderator;
+            # Narver & Slater (1990, JM) market orientation under competition.
+            considerations = """
+Market considerations:
+- Rapidly changing customer expectations and preferences
+- Intense competitive dynamics and market share battles
+- First-mover advantages can be significant
+- Brand positioning requires agility and responsiveness
+- Community sentiment can shift quickly
+- Market education and adoption acceleration are critical"""
+        elif role_perspective == "product_strategy":
+            # Cites: Brown & Eisenhardt (1997, ASQ) patching and time-paced evolution
+            # in product development; Eisenhardt & Tabrizi (1995, ASQ) accelerated
+            # product development (compressed cycles).
+            considerations = """
+Product strategy considerations:
+- Rapid iteration and feature development cycles
+- Need for flexible product roadmaps that can adapt quickly
+- Competitive feature parity and differentiation
+- Fast user feedback loops and product-market fit validation
+- Experimentation and A/B testing are essential
+- Product positioning requires constant refinement"""
+        elif role_perspective == "product_design":
+            # Cites: Hassenzahl & Tractinsky (2006, Behaviour & Information Technology)
+            # user experience; iterative design practice literature (e.g. agile
+            # software development in *Information Systems Research* streams).
+            considerations = """
+Design considerations:
+- Rapid adoption of emerging technologies and frameworks
+- Need for flexible, adaptable technical designs
+- Experimentation with cutting-edge tools and patterns
+- Quick prototyping and iterative design approaches
+- Integration with rapidly evolving technology ecosystems
+- Focus on scalable, future-proof technical architectures"""
+        else:
+            considerations = ""
+        
+        return f"INDUSTRY CONTEXT: DYNAMIC\nYou are operating in a highly dynamic, rapidly changing industry environment characterized by:\n{base}\n{considerations}"
+    
+    else:  # Stable
+        base = INDUSTRY_CONTEXT_STABLE_BASE
+        
+        if role_perspective == "strategic":
+            # Cites: Miller & Friesen (1983, SMJ) strategy–environment fit;
+            # Venkatraman & Prescott (1990, SMJ) coalignment of strategy with
+            # environment dimensions (including less dynamic settings).
+            considerations = """
+Strategic considerations:
+- Methodical planning and execution are valued
+- Building sustainable competitive advantages through quality and reliability
+- Long-term relationships and trust matter more
+- Incremental improvements can be highly effective
+- Risk management and stability are priorities
+- Focus on operational excellence and efficiency"""
+        elif role_perspective == "technical":
+            # Cites: Henderson & Clark (1990) incremental improvement path;
+            # Dosi (1982, Research Policy) technological paradigms and trajectories.
+            considerations = """
+Technical considerations:
+- Established technology standards and proven architectures
+- Focus on reliability, maintainability, and long-term stability
+- Technical debt management is a priority
+- Incremental improvements to existing systems
+- Well-understood scalability patterns
+- Emphasis on quality and robustness over speed"""
+        elif role_perspective == "operational":
+            # Cites: Flynn et al. (1994, JOM) quality management foundations;
+            # Venkatraman & Prescott (1990, SMJ) fit/coalignment logic.
+            considerations = """
+Operational considerations:
+- Established operational processes and procedures
+- Predictable resource planning and allocation
+- Methodical execution and quality control
+- Well-defined roles and responsibilities
+- Focus on operational efficiency and optimization
+- Long-term operational planning"""
+        elif role_perspective == "market":
+            # Cites: Narver & Slater (1990, JM); Day (1994, JM) capabilities in
+            # market-driven organizations (relationship depth, retention).
+            considerations = """
+Market considerations:
+- Established customer relationships and expectations
+- Predictable competitive dynamics
+- Brand reputation and trust built over time
+- Steady market growth patterns
+- Community and ecosystem stability
+- Focus on customer retention and satisfaction"""
+        elif role_perspective == "product_strategy":
+            # Cites: Abernathy & Utterback (1978) specific phase emphasis;
+            # Cooper & Kleinschmidt (1995, JPIM) success factors for incremental NPD.
+            considerations = """
+Product strategy considerations:
+- Methodical product roadmap planning
+- Focus on proven features and user needs
+- Incremental product improvements
+- Long-term product vision and planning
+- Quality and reliability over speed
+- Established product-market fit optimization"""
+        elif role_perspective == "product_design":
+            # Cites: Hassenzahl & Tractinsky (2006, Behaviour & Information Technology).
+            considerations = """
+Design considerations:
+- Reliance on proven, mature technologies and patterns
+- Emphasis on stability and reliability in design
+- Established design patterns and best practices
+- Methodical design and implementation processes
+- Integration with stable technology ecosystems
+- Focus on maintainable, robust technical designs"""
+        else:
+            considerations = ""
+        
+        return f"INDUSTRY CONTEXT: STABLE\nYou are operating in a relatively stable industry environment characterized by:\n{base}\n{considerations}"
+
+
+def get_product_type_guidance(product_type: str, role_perspective: str) -> str:
+    """
+    Get product type guidance for a specific role perspective.
+
+    Per-role "specifics" bullets are illustrative syntheses for prompting,
+    aligned with Abernathy & Utterback (1978), Henderson & Clark (1990), and
+    Jansen et al. (2006); each ``specifics`` block has ``# Cites:`` in code.
+
+    Args:
+        product_type: "Novel" or "Enhancement"
+        role_perspective: "strategic", "technical", "operational", "market", "product_strategy", "product_design"
+
+    Returns:
+        Formatted product type guidance string
+    """
+    if product_type.lower() == "novel":
+        base = PRODUCT_TYPE_NOVEL_BASE
+        
+        if role_perspective == "strategic":
+            specifics = ""
+        elif role_perspective == "technical":
+            # Cites: Henderson & Clark (1990, ASQ); Tushman & Anderson (1986,
+            # Administrative Science Quarterly) technological discontinuities.
+            specifics = """
+- May require building new technical capabilities from scratch
+- Unproven technologies and approaches may be necessary
+- Higher technical risk but potential for breakthrough solutions
+- Need for experimental architectures and proof-of-concepts
+- Integration challenges with existing systems
+- Opportunity to establish new technical standards"""
+        elif role_perspective == "operational":
+            # Cites: Jansen et al. (2006, SMJ) exploratory innovation, cross-
+            # functional coordination, and performance under environmental dynamism.
+            specifics = """
+- May require new operational capabilities and processes
+- Higher operational uncertainty and learning curve
+- Need for experimental approaches and pilot programs
+- Resource allocation for unproven initiatives
+- Change management for new operational models
+- Building operational infrastructure from scratch"""
+        elif role_perspective == "market":
+            # Cites: Slater, S. F., & Narver, J. C. (1994, Journal of Marketing)
+            # market orientation and competitive advantage; Kohli & Jaworski (1990)
+            # responsiveness to market intelligence in novel contexts.
+            specifics = """
+- Market education and awareness building required
+- Unproven customer demand and adoption patterns
+- Potential to create new market categories
+- Higher marketing investment for market creation
+- Community building from scratch
+- Early adopter focus and evangelism"""
+        elif role_perspective == "product_strategy":
+            # Cites: Montoya-Weiss & Calantone (1994, JPIM) NPD success factors;
+            # Brown & Eisenhardt (1997, ASQ) continuous change in product streams.
+            specifics = """
+- Defining new product categories and value propositions
+- Unproven product-market fit requires validation
+- Feature prioritization for market creation
+- Building product ecosystems from scratch
+- Early adopter focus and feedback loops
+- Potential for transformative user value"""
+        elif role_perspective == "product_design":
+            # Cites: Krishnan, V., & Ulrich, K. T. (2001, Management Science) product
+            # development decision making; Hassenzahl & Tractinsky (2006, BIT) user
+            # experience in technology-mediated innovation.
+            specifics = """
+- May require pioneering new technical design approaches
+- Exploration of emerging technologies and patterns
+- Building new technical capabilities and frameworks
+- Higher technical innovation and experimentation
+- Opportunity to establish new design standards
+- Integration challenges with existing systems"""
+        else:
+            specifics = ""
+        
+        return f"PRODUCT TYPE: NOVEL INNOVATION\nYou are dealing with a breakthrough, novel product that represents significant innovation:\n{base}{specifics}"
+    
+    else:  # Enhancement
+        base = PRODUCT_TYPE_ENHANCEMENT_BASE
+        
+        if role_perspective == "strategic":
+            specifics = ""
+        elif role_perspective == "technical":
+            # Cites: Henderson & Clark (1990, ASQ) incremental innovation;
+            # Jansen et al. (2006, SMJ) exploitative innovation.
+            specifics = """
+- Builds on existing technical infrastructure
+- Incremental improvements to proven architectures
+- Lower technical risk, leveraging known patterns
+- Focus on optimization and refinement
+- Seamless integration with existing systems
+- Incremental technical debt management"""
+        elif role_perspective == "operational":
+            # Cites: Jansen et al. (2006, SMJ) exploitative innovation and efficiency.
+            specifics = """
+- Leverages existing operational infrastructure
+- Incremental process improvements
+- Lower operational risk
+- Predictable resource requirements
+- Refinement of existing processes
+- Operational optimization focus"""
+        elif role_perspective == "market":
+            # Cites: Narver & Slater (1990, JM); Reinartz, W., Thomas, J. S., &
+            # Kumar, V. (2005, Journal of Marketing) customer relationship management.
+            specifics = """
+- Existing customer base and market understanding
+- Incremental value communication
+- Upgrade and upsell opportunities
+- Leveraging existing brand and relationships
+- Community engagement with enhancements
+- Focus on customer satisfaction and retention"""
+        elif role_perspective == "product_strategy":
+            # Cites: Cooper & Kleinschmidt (1995, JPIM) new product process and
+            # performance; Henard, D. H., & Szymanski, D. M. (2001, JPIM) meta-
+            # analysis of new product performance (incremental improvement themes).
+            specifics = """
+- Incremental feature additions and improvements
+- Building on proven product-market fit
+- Feature prioritization for existing users
+- Integration with existing product ecosystems
+- User satisfaction and retention focus
+- Refinement of value propositions"""
+        elif role_perspective == "product_design":
+            # Cites: Henderson & Clark (1990, ASQ); Hassenzahl & Tractinsky (2006, BIT).
+            specifics = """
+- Incremental improvements to existing technical designs
+- Refinement of proven design patterns
+- Leveraging established technical capabilities
+- Lower technical risk, building on known patterns
+- Optimization of existing design approaches
+- Seamless integration with current systems"""
+        else:
+            specifics = ""
+        
+        return f"PRODUCT TYPE: ENHANCEMENT\nYou are dealing with an enhancement to existing products or platforms:\n{base}{specifics}"
+

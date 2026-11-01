@@ -1,0 +1,33 @@
+{
+  "run_id": "OpenAI_Dynamic_Novel_20261031_120416",
+  "company": "OpenAI",
+  "industry_context": "Dynamic",
+  "product_type": "Novel",
+  "research_question": "How do firms maneuver openness to create and capture value?",
+  "written_at": "2026-10-31T12:04:16.357147",
+  "phases_captured": {
+    "deliberation": true,
+    "strategy_documents": true,
+    "observation_summary": true,
+    "field_notes": true,
+    "debriefing": true,
+    "construct_judging": false,
+    "private_channel": true,
+    "rag": true
+  },
+  "study_slug": "openness_maneuvering",
+  "study_version": "0.5.0",
+  "started_at": "2026-10-31T10:33:57.491380",
+  "finished_at": "2026-10-31T12:04:16.335046",
+  "errors": [
+    "panel_answers_lost: exchange 5: CEO; exchange 6: CMO"
+  ],
+  "role_models": {
+    "CEO": "gemini-3.1-pro-preview",
+    "CTO": "gemini-3.1-pro-preview",
+    "COO": "gemini-3.1-pro-preview",
+    "CMO": "gemini-3.1-pro-preview",
+    "Product_Strategist": "gemini-3.1-pro-preview",
+    "Product_Designer": "gemini-3.1-pro-preview"
+  }
+}

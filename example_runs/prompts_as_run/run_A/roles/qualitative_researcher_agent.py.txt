@@ -1,0 +1,761 @@
+"""Qualitative researcher agent — virtual ethnography (two phases).
+
+Implements the protocol in `protocols/ethnographic_protocol.yaml`.
+
+Phase 1 — Silent observation
+    `create_observer_agent(...)` returns an `LlmAgent` whose only job is
+    to read the deliberation log + scenario config and emit an
+    `ObservationSummary` (Pydantic-validated structured output). The
+    observer never contributes to the deliberation. Per Study Plan
+    §3.3, the observer is pinned to Gemini Pro for cross-provider
+    comparability — `providers.get_observer_model()` returns that.
+
+Phase 2 — Panel debriefing
+    `create_debriefer_agent(..., observation_summary=...)` returns an
+    `LlmAgent` whose system prompt embeds the field notes from Phase 1.
+    Each turn it emits one `PanelUtterance` (also Pydantic-validated).
+    The forbidden-vocabulary check runs as a post-hoc guard with one
+    retry (see `roles/forbidden_vocab.py`).
+
+Design notes
+------------
+* The agent factories are pure: they construct `LlmAgent` instances and
+  return them. The panel orchestration loop (who responds, in what order,
+  cross-talk detection) lives in a separate orchestrator module that
+  will be added in a follow-up PR. Keeping these concerns separate makes
+  the researcher unit-testable without spinning up the full TMT.
+* The YAML protocol is loaded once per factory call. If a long-running
+  process needs many researchers, the YAML loader in
+  `forbidden_vocab.py` is LRU-cached.
+* Method references (in comments only — not sent to the model):
+    Charmaz, K. (2014). Constructing grounded theory (2nd ed.). SAGE.
+    Patton, M. Q. (2015). Qualitative research and evaluation methods
+        (4th ed.). SAGE.
+    Strauss, A., & Corbin, J. (1998). Basics of qualitative research
+        (2nd ed.). SAGE.
+    Hine, C. (2015). Ethnography for the internet: Embedded, embodied
+        and everyday. Bloomsbury.
+"""
+
+from __future__ import annotations
+
+import logging
+from pathlib import Path
+from typing import Any, Optional
+
+import yaml
+from google.adk.agents import LlmAgent
+
+from .forbidden_vocab import check_utterance, load_forbidden_vocabulary
+from .researcher_schemas import ObservationSummary, PanelUtterance
+
+try:
+    # Package-relative import (the worktree directory IS the package).
+    from ..providers import build_structured_agent, get_model, get_observer_model
+    from ..studies import StudyConfig
+except (ImportError, ValueError):  # pragma: no cover  (script-style execution)
+    from providers import build_structured_agent, get_model, get_observer_model  # type: ignore[no-redef]
+    from studies import StudyConfig  # type: ignore[no-redef]
+
+log = logging.getLogger(__name__)
+
+_PROTOCOL_PATH = (
+    Path(__file__).resolve().parent.parent / "protocols" / "ethnographic_protocol.yaml"
+)
+
+
+# ---------------------------------------------------------------------------
+# YAML loading helpers
+# ---------------------------------------------------------------------------
+
+def _load_protocol(protocol_path: Path | None = None) -> dict[str, Any]:
+    """Load the ethnographic protocol YAML."""
+    path = protocol_path or _PROTOCOL_PATH
+    with path.open("r", encoding="utf-8") as fh:
+        return yaml.safe_load(fh)
+
+
+def _merged_forbidden_vocab(
+    protocol: dict[str, Any], study: Optional["StudyConfig"],
+) -> list[str]:
+    """Combine the protocol's methodological forbidden vocab with the
+    study's construct-specific list.
+
+    Order: methodological terms first (universal across studies),
+    then construct-specific terms (study-dependent). The researcher
+    is not told which words come from which subset — they're
+    presented as one list.
+
+    Falls back to the legacy `forbidden_vocabulary` key for backwards
+    compatibility with older protocol YAMLs.
+    """
+    methodological = (
+        protocol.get("methodological_forbidden_vocabulary")
+        or protocol.get("forbidden_vocabulary")  # legacy key
+        or []
+    )
+    construct = (
+        list(study.construct_forbidden_vocabulary) if study is not None else []
+    )
+    # Deduplicate while preserving order.
+    seen: set[str] = set()
+    merged: list[str] = []
+    for w in list(methodological) + construct:
+        if w not in seen:
+            merged.append(w)
+            seen.add(w)
+    return merged
+
+
+def _apply_study_overlay(
+    protocol: dict[str, Any], study: Optional["StudyConfig"],
+) -> dict[str, Any]:
+    """Deep-merge a study's `protocol_overlay` over the framework YAML.
+
+    The overlay is *additive only* — it cannot delete framework rules
+    or areas. Three overlay keys are recognised:
+
+    * ``thematic_areas_overlay`` (list[dict]) — appended to the
+      framework's ``thematic_areas`` list. Each entry must carry an
+      ``id`` that does not collide with a framework-level area.
+    * ``behavioural_rules_additions`` (str) — appended as a separate
+      paragraph onto the framework's ``behavioural_rules`` string.
+    * ``panel_format_additions`` (dict) — dict-merged into the
+      framework's ``panel_format``; keys present in the overlay
+      override the framework defaults.
+
+    Unknown keys in the overlay are ignored with a debug log line —
+    studies that want to extend the contract have to also extend
+    this function and the consumers downstream.
+
+    Returns a NEW dict; the input `protocol` is not mutated.
+    """
+    if study is None:
+        return protocol
+    overlay = getattr(study, "protocol_overlay", None) or {}
+    if not overlay:
+        return protocol
+
+    merged: dict[str, Any] = {**protocol}
+
+    # Thematic areas — append. Collision detection lives outside; if
+    # the overlay reuses an existing id, the renderer will simply
+    # render both, which is what an explicit override-by-id call
+    # would do anyway.
+    extra_areas = overlay.get("thematic_areas_overlay")
+    if extra_areas:
+        merged["thematic_areas"] = list(
+            merged.get("thematic_areas", [])
+        ) + list(extra_areas)
+
+    # Behavioural rules — append as a separate paragraph. Studies
+    # add construct-specific probing discipline; the framework-level
+    # rules stay verbatim above.
+    rules_addition = overlay.get("behavioural_rules_additions")
+    if rules_addition:
+        base = (merged.get("behavioural_rules") or "").rstrip()
+        addition = str(rules_addition).strip()
+        merged["behavioural_rules"] = f"{base}\n\n{addition}" if base else addition
+
+    # Panel format — dict-merge.
+    format_additions = overlay.get("panel_format_additions")
+    if format_additions:
+        merged["panel_format"] = {
+            **dict(merged.get("panel_format", {})),
+            **dict(format_additions),
+        }
+
+    # Any other overlay keys: log and ignore.
+    recognised = {
+        "thematic_areas_overlay",
+        "behavioural_rules_additions",
+        "panel_format_additions",
+    }
+    unknown = set(overlay.keys()) - recognised
+    if unknown:
+        log.debug(
+            "study overlay ignored unrecognised keys: %s",
+            sorted(unknown),
+        )
+
+    return merged
+
+
+def closing_area_id(protocol: dict[str, Any]) -> Optional[str]:
+    """Return the id of the area flagged `always_ask: true`, or None.
+
+    The closing area is whichever thematic area has `always_ask: True`
+    in the (overlay-merged) protocol. Hardcoded "Area F" references
+    are replaced by this lookup so a study overlay can in principle
+    add areas without breaking the closing-area logic.
+    """
+    for area in protocol.get("thematic_areas", []) or []:
+        if area.get("always_ask"):
+            return area.get("id")
+    return None
+
+
+def _render_thematic_areas(protocol: dict[str, Any]) -> str:
+    """Render the six thematic areas + stems as a plain-text block."""
+    lines: list[str] = []
+    for area in protocol.get("thematic_areas", []):
+        lines.append(f"Area {area['id']} — {area['name']}")
+        purpose = (area.get("purpose") or "").strip().replace("\n", " ")
+        if purpose:
+            lines.append(f"  Purpose: {purpose}")
+        if area.get("always_ask"):
+            lines.append("  (Always ask before closing the debriefing.)")
+        lines.append(
+            "  Question stems (fill [X], [Y], [ROLE], [QUOTE] from the field notes):"
+        )
+        for stem in area.get("stems", []):
+            lines.append(f"    - {stem}")
+        lines.append("")
+    return "\n".join(lines).rstrip()
+
+
+def _render_observation_summary(summary: ObservationSummary) -> str:
+    """Render an ObservationSummary as a structured block for the prompt."""
+    parts: list[str] = []
+    parts.append("=== YOUR FIELD NOTES (from silent observation of the deliberation) ===")
+    parts.append("")
+
+    parts.append("Decisions the TMT made (in their own words):")
+    for d in summary.decisions:
+        parts.append(f"  - {d}")
+    if not summary.decisions:
+        parts.append("  (none recorded)")
+    parts.append("")
+
+    parts.append("Components / products / assets discussed (panel's terminology):")
+    for c in summary.components:
+        parts.append(f"  - {c}")
+    if not summary.components:
+        parts.append("  (none recorded)")
+    parts.append("")
+
+    if summary.disagreements:
+        parts.append("Disagreements observed:")
+        for d in summary.disagreements:
+            parties = ", ".join(d.parties) if d.parties else "(parties unspecified)"
+            parts.append(f"  - Topic: {d.topic}")
+            parts.append(f"    Between: {parties}")
+            parts.append(f"    Resolution: {d.resolution}")
+        parts.append("")
+
+    if summary.role_contributions:
+        parts.append("Role contributions:")
+        for rc in summary.role_contributions:
+            if rc.pushed_for:
+                parts.append(f"  - {rc.role} pushed for: {', '.join(rc.pushed_for)}")
+            if rc.pushed_back_on:
+                parts.append(f"  - {rc.role} pushed back on: {', '.join(rc.pushed_back_on)}")
+            if rc.quiet_on:
+                parts.append(f"  - {rc.role} was quiet on: {', '.join(rc.quiet_on)}")
+        parts.append("")
+
+    if summary.alternatives_considered:
+        parts.append("Alternatives considered but not pursued:")
+        for a in summary.alternatives_considered:
+            parts.append(f"  - {a}")
+        parts.append("")
+
+    if summary.flagged_vocabulary_used:
+        parts.append(
+            "Spontaneous use of watch-listed vocabulary by panelists "
+            "(you may echo these back using the panelist's phrasing):"
+        )
+        for v in summary.flagged_vocabulary_used:
+            parts.append(f"  - {v.role} said '{v.word}' — context: {v.context}")
+        parts.append("")
+
+    return "\n".join(parts).rstrip()
+
+
+# ---------------------------------------------------------------------------
+# Phase 1 factory — silent observer
+# ---------------------------------------------------------------------------
+
+def create_observer_agent(
+    company: str,
+    current_year: int = 2030,
+    industry_context: str = "Dynamic",
+    product_type: str = "Novel",
+    protocol_path: Path | None = None,
+    study: Optional["StudyConfig"] = None,
+) -> LlmAgent:
+    """Build the Phase-1 silent observer agent.
+
+    The observer reads the complete deliberation log and the scenario
+    configuration, then emits a single `ObservationSummary` JSON object.
+    It is pinned to Gemini Pro regardless of `TMT_PROVIDER` so the
+    observation summaries are comparable across cross-provider runs.
+
+    Methodological invariant
+    ------------------------
+    This agent is BLIND to the study's research question and theoretical
+    lens. It receives the construct-specific forbidden-vocabulary list
+    (so it knows which words to avoid) and the `flagged_vocabulary`
+    glossary watch-list (so it knows which spontaneous panelist words
+    to log verbatim) — but it never sees WHY those words matter.
+
+    Args:
+        company: Firm under simulation (e.g. "OpenAI").
+        current_year: Year in which the deliberation is set.
+        industry_context: 'Dynamic' or 'Stable' — passed for the
+            observer's situational awareness, not used in the prompt's
+            analytical framing.
+        product_type: 'Novel' or 'Enhancement' — same note as above.
+        protocol_path: Override path to the YAML protocol (mainly tests).
+        study: Optional `StudyConfig`. When provided, the construct-
+            specific forbidden vocab + flagged vocabulary watch-list
+            are taken from it. When None, the framework falls back to
+            the protocol's legacy `forbidden_vocabulary` key.
+
+    Returns:
+        An ADK `LlmAgent` with `output_schema=ObservationSummary`.
+    """
+    protocol = _load_protocol(protocol_path)
+    forbidden_list = _merged_forbidden_vocab(protocol, study)
+    forbidden_words = ", ".join(f"'{w}'" for w in forbidden_list)
+
+    flagged_list = list(study.flagged_vocabulary) if study is not None else []
+    flagged_block = ""
+    if flagged_list:
+        flagged_words = ", ".join(f"'{w}'" for w in flagged_list)
+        flagged_block = f"""
+
+SPONTANEOUS-USE WATCH-LIST
+--------------------------
+If any panellist uses any of these specific words SPONTANEOUSLY
+during the deliberation, log the use in `flagged_vocabulary_used`
+with the word, the role who said it, and the surrounding utterance
+verbatim:
+{flagged_words}.
+
+Do not interpret why these words might matter. Do not include them
+in any other field. Do not echo them back in your structured fields.
+The list is a capture mechanism, not a hint about the analytical
+agenda.
+"""
+
+    instruction = f"""You are a qualitative researcher conducting virtual ethnography of the
+Top Management Team of {company} ({industry_context} industry context,
+{product_type} product type) in {current_year}.
+
+You did NOT participate in the deliberation you are about to read. You
+observed it silently. Your job in this phase is to produce structured
+FIELD NOTES that you will rely on later when debriefing the panel.
+These field notes are themselves data — they are read by analysts and
+used by the debriefing agent.
+
+INPUTS YOU WILL RECEIVE
+-----------------------
+- The complete inter-agent deliberation log (every utterance, in order,
+  with role and timestamp).
+- Any strategic artefacts produced during the deliberation (roadmaps,
+  component lists, decision rationales, memos).
+- The retrievals each role agent made from the firm's RAG corpus, where
+  available.
+- The scenario configuration (firm, industry context, product type).
+
+OBSERVATIONAL DISCIPLINE (strict)
+---------------------------------
+1. Record decisions, components, disagreements, role contributions, and
+   alternatives USING THE PANEL'S OWN VOCABULARY. Do not paraphrase
+   into your analytical categories. If they said 'the inference API',
+   you write 'the inference API' — not 'the customer-facing service'.
+2. Do NOT introduce any of these words in your own writing:
+   {forbidden_words}.
+3. Do NOT speculate beyond what the deliberation log contains. If
+   something is uncertain, omit it. Field notes report behaviour, not
+   inferred motives.
+4. Do NOT summarise the deliberation as theoretical categories. Just
+   record what happened, in the panel's words.
+5. Differentiate the roles. The members of the TMT should read as
+   having distinct positions; if they sound homogenised in your notes,
+   look again at the deliberation.{flagged_block}
+
+OUTPUT
+------
+Return ONLY a single JSON object conforming to the `ObservationSummary`
+schema. No prose, no markdown, no commentary outside the JSON.
+"""
+
+    return build_structured_agent(
+        name="QualitativeResearcher_Observer",
+        model=get_observer_model(),
+        instruction=instruction,
+        description=(
+            f"Silent ethnographic observer of the {company} TMT deliberation. "
+            f"Produces structured field notes (ObservationSummary) that drive "
+            f"the panel-debriefing phase."
+        ),
+        output_schema=ObservationSummary,
+    )
+
+
+# ---------------------------------------------------------------------------
+# Live-streaming factory — mid-phase field-noter
+# ---------------------------------------------------------------------------
+
+def create_field_noter_agent(
+    company: str,
+    current_year: int = 2030,
+    industry_context: str = "Dynamic",
+    product_type: str = "Novel",
+    protocol_path: Path | None = None,
+    study: Optional["StudyConfig"] = None,
+) -> LlmAgent:
+    """Build the live-streaming ethnographic note-taker.
+
+    Same persona as the Observer (sits in the same persistent ADK
+    `researcher` session), but with NO `output_schema`. The
+    orchestrator invokes it mid-deliberation and mid-artefact phase
+    to produce short free-form field notes about events that just
+    happened. The notes land in the researcher's session and are
+    available as conversation context to:
+      * subsequent FieldNoter invocations (so notes build on notes)
+      * the Observer's final ObservationSummary consolidation
+      * the Debriefer's panel-interview turns
+
+    Methodological invariant
+    ------------------------
+    BLIND to the study's research question and theoretical lens.
+    Receives the merged forbidden-vocabulary list (methodological +
+    construct) so it knows which words to avoid in its own prose,
+    plus the watch-list of words to quote verbatim if panellists use
+    them. Never sees WHY any of those words matter.
+    """
+    protocol = _load_protocol(protocol_path)
+    forbidden_list = _merged_forbidden_vocab(protocol, study)
+    forbidden_words = ", ".join(f"'{w}'" for w in forbidden_list)
+
+    flagged_list = list(study.flagged_vocabulary) if study is not None else []
+    flagged_block = ""
+    if flagged_list:
+        flagged_words = ", ".join(f"'{w}'" for w in flagged_list)
+        flagged_block = f"""
+
+WATCH-LIST FOR SPONTANEOUS USE
+------------------------------
+If a panellist uses any of these specific words during the events
+you are noting, quote the phrase verbatim in your note. Do not
+introduce these words yourself. Do not interpret why they matter:
+{flagged_words}.
+"""
+
+    instruction = f"""You are a qualitative researcher conducting LIVE virtual ethnography
+of the Top Management Team of {company} ({industry_context} industry
+context, {product_type} product type) in {current_year}.
+
+You are the SAME researcher persona who will later produce the
+structured ObservationSummary and conduct the panel debriefing. The
+notes you take here are working notes — your own running journal
+during the deliberation and the post-deliberation document-authoring.
+Later turns of this same session will continue from where these
+notes leave off, so write for your own future self.
+
+WHEN YOU ARE INVOKED
+--------------------
+The orchestrator will hand you a batch of recent events (public
+deliberation acts, role-artefact authoring, etc.) since your previous
+note. Your job: write a SHORT free-form field note (under ~150
+words) capturing anything noteworthy about THIS batch — patterns,
+shifts in position, contested decisions, items the panel treated
+asymmetrically. Be ethnographic: anchor on what actually happened,
+quote the panel's own words where it sharpens the observation. Do
+not seek evidence of any particular construct; describe what you
+see.
+
+THIS IS NOT THE STRUCTURED SUMMARY
+The final structured `ObservationSummary` happens later. These mid-
+phase notes are exploratory: they capture nuance that might get lost
+when you later compress into the structured schema. Write in your
+own voice, prose only — no JSON, no schema, no markdown headers.
+
+FORBIDDEN VOCABULARY
+--------------------
+Do NOT use these words in your own writing (you may quote them only
+if a panellist used them verbatim):
+{forbidden_words}.{flagged_block}
+
+STAY IN VOICE
+-------------
+You are the same researcher across all your invocations in this
+session. Build on your prior notes. If a pattern you flagged
+earlier is sharpening or breaking, say so explicitly.
+"""
+
+    return LlmAgent(
+        name="QualitativeResearcher_FieldNoter",
+        model=get_observer_model(),
+        instruction=instruction,
+        description=(
+            f"Live ethnographic note-taker for the {company} TMT. Invoked "
+            f"periodically during deliberation and artefact authoring to "
+            f"emit short free-form field notes that accumulate in the "
+            f"researcher's session before the structured Observation "
+            f"Summary."
+        ),
+        # NO output_schema — free-form text is the point.
+    )
+
+
+# ---------------------------------------------------------------------------
+# Phase 2 factory — panel debriefer
+# ---------------------------------------------------------------------------
+
+def create_debriefer_agent(
+    company: str,
+    observation_summary: ObservationSummary,
+    current_year: int = 2030,
+    industry_context: str = "Dynamic",
+    product_type: str = "Novel",
+    model: str | None = None,
+    protocol_path: Path | None = None,
+    study: Optional["StudyConfig"] = None,
+) -> LlmAgent:
+    """Build the Phase-2 panel-debriefer agent.
+
+    The debriefer's system prompt is composed up-front from:
+      * the YAML protocol's `stance` and `behavioural_rules`,
+      * the study's RESEARCH CONTEXT block (research question +
+        theoretical lens + background prose), framed as background
+        for relevance judgement only — NOT as a steer toward
+        finding evidence,
+      * a rendered view of `observation_summary` (so the model can
+        name specific decisions / components / disagreements),
+      * the six thematic areas + stems,
+      * the panel-format rules and forbidden-vocabulary list (the
+        merged methodological + construct list).
+
+    Methodological invariant
+    ------------------------
+    The Debriefer is the ONLY researcher shell that sees the study's
+    research question and theoretical lens. The framing in the prompt
+    explicitly forbids steering: "the panel may or may not produce
+    material relevant to this question — follow them where they went;
+    if the deliberation reveals nothing about the construct, that
+    absence is itself a finding."
+
+    Args:
+        company: Firm under simulation.
+        observation_summary: The Phase-1 field notes for this run.
+        current_year, industry_context, product_type: Scenario context.
+        model: Provider key passed to `providers.get_model`. If None,
+            falls back to `TMT_PROVIDER` env.
+        protocol_path: Override the YAML protocol location.
+        study: Optional `StudyConfig` — research question, lens, and
+            construct-specific vocabulary. When None, the agent falls
+            back to a generic 'background not specified' framing and
+            uses the protocol's legacy `forbidden_vocabulary` only.
+
+    Returns:
+        An ADK `LlmAgent` with `output_schema=PanelUtterance`.
+    """
+    protocol = _load_protocol(protocol_path)
+    # Apply the active study's overlay so construct-specific thematic
+    # areas + any additional behavioural rules / panel-format tweaks
+    # land in the debriefer's prompt.
+    protocol = _apply_study_overlay(protocol, study)
+    forbidden_list = _merged_forbidden_vocab(protocol, study)
+    forbidden_words = ", ".join(f"'{w}'" for w in forbidden_list)
+
+    target_range = protocol.get("panel_format", {}).get("target_exchanges", [15, 25])
+    if isinstance(target_range, list) and len(target_range) == 2:
+        target_lo, target_hi = target_range
+    else:
+        target_lo, target_hi = 15, 25
+
+    stance = (protocol.get("stance") or "").strip()
+    rules = (protocol.get("behavioural_rules") or "").strip()
+    areas_block = _render_thematic_areas(protocol)
+    notes_block = _render_observation_summary(observation_summary)
+    research_context_block = _render_research_context(study)
+
+    instruction = f"""{stance}
+
+SCENARIO CONTEXT (for your own situational awareness — do NOT mention
+these labels in your questions; ask about what the panel did, not about
+'dynamic industry' or 'novel product'):
+- Firm: {company}
+- Year: {current_year}
+- Industry context: {industry_context}
+- Product type: {product_type}
+
+{research_context_block}
+
+{notes_block}
+
+BEHAVIOURAL RULES (binding)
+---------------------------
+{rules}
+
+FORBIDDEN VOCABULARY
+--------------------
+Do not use these words unless echoing a panelist verbatim:
+{forbidden_words}.
+
+If you violate this rule, you will be asked to rewrite the utterance,
+which is costly. Prefer to ask about the specific decision or
+component by name, in the panel's own words.
+
+THEMATIC AREAS (suggested order A → F; use judgement; Area F always closes)
+---------------------------------------------------------------------------
+{areas_block}
+
+PANEL FORMAT
+------------
+- Default addressing: 'group' (any role can answer; let cross-talk happen).
+- Address a specific role only when their perspective is specifically
+  needed (e.g., "CTO, I want to hear from you on this").
+- Target length for the whole debriefing: {target_lo}–{target_hi} panel
+  exchanges. End when (a) all salient areas have been substantively
+  covered, (b) follow-ups are producing thin or repetitive material,
+  and (c) Area F has been asked and answered.
+
+OUTPUT FORMAT
+-------------
+On each turn you produce EXACTLY ONE researcher utterance as a JSON
+object conforming to the `PanelUtterance` schema:
+  - area_id        — one of 'A', 'B', 'C', 'D', 'E', 'F'.
+  - addressed_to   — 'group' or a specific role name.
+  - text           — the question/probe itself.
+  - anchor_refs    — list of verbatim items from your field notes
+                     (decisions / components / disagreements) that this
+                     utterance references. MUST be non-empty. If you
+                     cannot anchor your question to an observed item,
+                     you are not allowed to ask it.
+  - is_followup    — true iff this is a follow-up to the previous turn.
+  - ends_debriefing — true ONLY on your closing turn (after Area F has
+                     been asked and answered, or when follow-ups go thin).
+
+Return only the JSON object. No prose, no markdown.
+"""
+
+    return build_structured_agent(
+        name="QualitativeResearcher_Debriefer",
+        model=get_model(model),
+        instruction=instruction,
+        description=(
+            f"Panel debriefer for the {company} TMT. Generates one anchored "
+            f"PanelUtterance per turn, grounded in the Phase-1 observation summary."
+        ),
+        output_schema=PanelUtterance,
+    )
+
+
+def _render_research_context(study: Optional["StudyConfig"]) -> str:
+    """Render the study's research question + lens as BACKGROUND
+    framing — never as a steer.
+
+    The block is shown only to the Debriefer (not the Observer or
+    FieldNoter). It explicitly states that:
+      * the lens is for LATER ANALYSIS, not for shaping questions;
+      * the panel may or may not produce material relevant to the
+        research question;
+      * absence of construct-relevant material is itself a finding;
+      * questions must anchor on what the deliberation actually
+        produced, not on the research question.
+    """
+    if study is None:
+        # No study attached — generic framing so the Debriefer is at
+        # least told to be relevance-driven without any specific
+        # research-question bias.
+        return (
+            "RESEARCH CONTEXT (background only)\n"
+            "----------------------------------\n"
+            "No study config was attached to this run. Be relevance-\n"
+            "driven: anchor each probe on items that were consequential\n"
+            "in the deliberation itself (decisions actually made,\n"
+            "disagreements actually surfaced, items the panel actually\n"
+            "contested)."
+        )
+    background = (study.debriefer_background_block or "").strip()
+    background_part = f"\n\n  Additional background:\n    {background}" if background else ""
+    return f"""RESEARCH CONTEXT (background for your relevance judgement only)
+---------------------------------------------------------------
+This deliberation is being run as part of a study examining:
+
+  Research question:
+    {study.research_question}
+
+  Theoretical lens (for later analysis, NOT for your questioning):
+    {study.theoretical_lens}{background_part}
+
+THE FOLLOWING RULES BIND YOU AS THE DEBRIEFER
+---------------------------------------------
+The panel may or may not produce material directly relevant to this
+research question. Follow the panel where they actually went in the
+deliberation. Do NOT steer them toward the research question. If the
+deliberation reveals nothing about the construct under study, that
+absence is itself a finding — note it; do not manufacture relevance.
+
+Anchor each probe on items that were CONSEQUENTIAL in the deliberation
+(decisions actually made, disagreements actually surfaced, items the
+panel actually contested) — regardless of whether they relate to the
+research question."""
+
+
+# ---------------------------------------------------------------------------
+# Runtime guard — used by the orchestrator after each debriefer turn
+# ---------------------------------------------------------------------------
+
+def utterance_violates_protocol(
+    utterance: PanelUtterance,
+    panelist_quotes_so_far: list[str],
+    protocol_path: Path | None = None,
+    study: Optional["StudyConfig"] = None,
+) -> list[str]:
+    """Validate a debriefer utterance against the two runtime rules.
+
+    Rules:
+      1. Forbidden vocabulary — merged list of the protocol's
+         `methodological_forbidden_vocabulary` + the study's
+         `construct_forbidden_vocabulary`. None of these may appear
+         in `utterance.text` unless the panel used the same word in
+         `panelist_quotes_so_far`.
+      2. Anchored questions — `utterance.anchor_refs` must be non-empty.
+
+    Args:
+        utterance: The candidate `PanelUtterance` from the debriefer.
+        panelist_quotes_so_far: All panelist responses observed so far in
+            this debriefing. Used to permit echoes (protocol §4.4).
+        protocol_path: Override YAML location (mainly tests).
+        study: Optional `StudyConfig` — contributes
+            `construct_forbidden_vocabulary` to the merged list.
+
+    Returns:
+        A list of human-readable violation messages. Empty if the
+        utterance passes. The orchestrator should feed this list into
+        a single retry prompt via `forbidden_vocab.format_violations`.
+    """
+    study_extras: tuple[str, ...] = (
+        tuple(study.construct_forbidden_vocabulary) if study is not None else ()
+    )
+    forbidden = load_forbidden_vocabulary(
+        str(protocol_path) if protocol_path else None,
+        study_extras=study_extras,
+    )
+    messages: list[str] = []
+
+    vio = check_utterance(
+        utterance.text,
+        panelist_quotes=panelist_quotes_so_far,
+        forbidden=forbidden,
+    )
+    for v in vio:
+        messages.append(
+            f"Forbidden word '{v.word}' at position {v.position}: "
+            f"'…{v.snippet}…'"
+        )
+
+    if not utterance.anchor_refs:
+        messages.append(
+            "anchor_refs is empty — every utterance must reference at least "
+            "one item from the observation summary (a decision, component, "
+            "or disagreement topic), verbatim."
+        )
+
+    return messages

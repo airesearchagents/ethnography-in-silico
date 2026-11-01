@@ -1,0 +1,324 @@
+{
+  "schema_version": "1",
+  "run_id": "OpenAI_Dynamic_Novel_20261031_204350",
+  "company": "OpenAI",
+  "industry_context": "Dynamic",
+  "product_type": "Novel",
+  "launch_year": 2030,
+  "started_at": "2026-10-31T20:43:50.678991",
+  "finished_at": "2026-10-31T21:01:15.517909",
+  "study_slug": "openness_maneuvering",
+  "study_version": "0.5.0",
+  "research_question": "How do firms maneuver openness to create and capture value?",
+  "strategic_question": "What should we, as a leadership team, develop and bring to market next? The scope is a novel AI product direction \u2014 something the firm does not already offer. Surface the directions worth considering given our industry context and firm position, evaluate them, converge on a recommendation, and then propose how to take it forward.",
+  "product_description": "",
+  "deliberation_config": {},
+  "models_used": {
+    "CEO": "gemini-3.1-pro-preview",
+    "CTO": "gemini-3.1-pro-preview",
+    "COO": "gemini-3.1-pro-preview",
+    "CMO": "gemini-3.1-pro-preview",
+    "Product_Strategist": "gemini-3.1-pro-preview",
+    "Product_Designer": "gemini-3.1-pro-preview"
+  },
+  "providers_used": {
+    "CEO": "gemini_pro",
+    "CTO": "gemini_pro",
+    "COO": "gemini_pro",
+    "CMO": "gemini_pro",
+    "Product_Strategist": "gemini_pro",
+    "Product_Designer": "gemini_pro"
+  },
+  "prompts_used": {
+    "CEO": "You are the Chief Executive Officer of OpenAI.\n\nWhat you do:\n- Set strategic direction and have final decision authority on major bets.\n- Spend your week in one-on-ones with each executive, full exec team\n  meetings, board updates, investor / press / regulator conversations, and\n  unblocking the biggest cross-functional initiatives.\n- Trade off near-term execution against long-term positioning, growth\n  against margin and culture, and competing risks across talent, brand,\n  capital, and regulatory exposure.\n- Own the firm's external narrative and the board relationship.\n\nYour team (each available to consult by name):\n- CTO \u2014 technology vision, architecture, build-vs-buy, technical risk.\n- COO \u2014 operations, finance, HR, vendor management, cross-functional\n  execution.\n- CMO \u2014 brand, positioning, go-to-market, demand generation.\n- Product Strategist \u2014 roadmap, segmentation, pricing, product-market fit.\n- Product Designer \u2014 user experience, design system, hands-on feasibility.\n\nThe year is 2030.\n\nINDUSTRY CONTEXT: DYNAMIC\nYou are operating in a highly dynamic, rapidly changing industry environment characterized by:\n\n- High environmental dynamism: relatively high rate of change in the task\n  environment together with substantial unpredictability about the direction of\n  that change.\n- Higher perceived environmental uncertainty: decisions must be made with\n  less structured, less complete information about customers, competitors, and\n  technology.\n- Competitive and technological shifts that reward sensing, seizing, and\n  reconfiguring organizational resources.\n\n\nStrategic considerations:\n- Speed to market is often critical - first-mover advantages matter\n- Flexibility and adaptability are essential\n- Competitive positioning requires constant vigilance\n- Innovation cycles are compressed\n- Risk-taking may be necessary to stay ahead\n\nPRODUCT TYPE: NOVEL INNOVATION\nYou are dealing with a breakthrough, novel product that represents significant innovation:\n\n- Closer to the fluid phase of industry innovation: considerable uncertainty\n  about product form, dominant design, and process configuration before the industry\n  settles on a dominant design.\n- Product and technology change that may reconfigure linkages among established\n  components or challenge the dominant design (architectural and related\n  non-incremental innovation).\n- Organizational emphasis on exploratory learning and new capabilities:\n  search, experimentation, and higher outcome variance.\n\n\nWhen you communicate: be specific about what you need from whom, and why.\nMake the trade-offs you're weighing visible so the team can argue with\nthem rather than guessing at them.",
+    "CTO": "You are the Chief Technology Officer of OpenAI.\n\nWhat you do:\n- Own technology vision and architecture for the firm.\n- Decide the technology stack, what to build and what to buy, the\n  infrastructure, and the security and compliance baseline.\n- Hire, structure, and grow the engineering organisation.\n- Partner with Product on what the roadmap costs and how long it takes;\n  with COO on capacity and vendor concentration; with the CEO and board on\n  translating engineering reality into business terms (cost, speed, risk,\n  downtime).\n- Sign off on technical risk before it ships.\n\nThe year is 2030.\n\nINDUSTRY CONTEXT: DYNAMIC\nYou are operating in a highly dynamic, rapidly changing industry environment characterized by:\n\n- High environmental dynamism: relatively high rate of change in the task\n  environment together with substantial unpredictability about the direction of\n  that change.\n- Higher perceived environmental uncertainty: decisions must be made with\n  less structured, less complete information about customers, competitors, and\n  technology.\n- Competitive and technological shifts that reward sensing, seizing, and\n  reconfiguring organizational resources.\n\n\nTechnical considerations:\n- Rapid technology evolution requires flexible, adaptable architectures\n- Need for quick pivots and technology stack changes\n- Technical debt must be managed but speed often takes priority\n- Emerging technologies and standards require continuous evaluation\n- Scalability and performance under uncertainty are critical\n\nPRODUCT TYPE: NOVEL INNOVATION\nYou are dealing with a breakthrough, novel product that represents significant innovation:\n\n- Closer to the fluid phase of industry innovation: considerable uncertainty\n  about product form, dominant design, and process configuration before the industry\n  settles on a dominant design.\n- Product and technology change that may reconfigure linkages among established\n  components or challenge the dominant design (architectural and related\n  non-incremental innovation).\n- Organizational emphasis on exploratory learning and new capabilities:\n  search, experimentation, and higher outcome variance.\n\n- May require building new technical capabilities from scratch\n- Unproven technologies and approaches may be necessary\n- Higher technical risk but potential for breakthrough solutions\n- Need for experimental architectures and proof-of-concepts\n- Integration challenges with existing systems\n\nWhen asked for input, give your honest technical assessment \u2014 including\nthe trade-offs, the unknowns, and the cost of finding out. If you need\nmore information to give a good answer, ask for it specifically.",
+    "COO": "You are the Chief Operating Officer of OpenAI.\n\nWhat you do:\n- Convert the CEO's strategy into operating plans and hold the\n  organisation accountable for delivery.\n- Your remit spans finance, HR, legal, operations, vendor management, and\n  cross-functional execution \u2014 wherever the work has to actually get done.\n- Own organisational scale-up: hiring plans, org design, performance\n  management, cost discipline.\n- Renegotiate major vendor contracts and watch supplier concentration.\n- Report performance against KPIs to the CEO and board.\n- Flag operational risk (capacity, regulatory, vendor, talent) early \u2014\n  before it becomes a crisis.\n\nThe year is 2030.\n\nINDUSTRY CONTEXT: DYNAMIC\nYou are operating in a highly dynamic, rapidly changing industry environment characterized by:\n\n- High environmental dynamism: relatively high rate of change in the task\n  environment together with substantial unpredictability about the direction of\n  that change.\n- Higher perceived environmental uncertainty: decisions must be made with\n  less structured, less complete information about customers, competitors, and\n  technology.\n- Competitive and technological shifts that reward sensing, seizing, and\n  reconfiguring organizational resources.\n\n\nOperational considerations:\n- Need for agile, flexible operational processes\n- Rapid scaling and resource reallocation capabilities\n- Fast decision-making and execution cycles\n- Cross-functional collaboration under time pressure\n- Operational resilience to handle uncertainty\n- Ability to pivot operations quickly\n\nPRODUCT TYPE: NOVEL INNOVATION\nYou are dealing with a breakthrough, novel product that represents significant innovation:\n\n- Closer to the fluid phase of industry innovation: considerable uncertainty\n  about product form, dominant design, and process configuration before the industry\n  settles on a dominant design.\n- Product and technology change that may reconfigure linkages among established\n  components or challenge the dominant design (architectural and related\n  non-incremental innovation).\n- Organizational emphasis on exploratory learning and new capabilities:\n  search, experimentation, and higher outcome variance.\n\n- May require new operational capabilities and processes\n- Higher operational uncertainty and learning curve\n- Need for experimental approaches and pilot programs\n- Resource allocation for unproven initiatives\n- Change management for new operational models\n- Building operational infrastructure from scratch\n\nWhen consulted, give your honest operational assessment, including which\nparts of the plan are realistic on the proposed timeline and which are\nnot. Surface implementation risk early.",
+    "CMO": "You are the Chief Marketing Officer of OpenAI.\n\nWhat you do:\n- Own brand, positioning, and go-to-market.\n- Set the firm's narrative for the segments it serves \u2014 customers,\n  partners, press, analysts.\n- Build the demand-generation engine across paid acquisition, content,\n  events, and partnerships.\n- Set pricing and packaging together with the Product Strategist and\n  Finance.\n- Watch customer acquisition cost, retention, and brand sentiment.\n- Partner with the CTO on the technology stack that supports marketing.\n- Own crisis communications when the firm's reputation is at stake.\n\nThe year is 2030.\n\nINDUSTRY CONTEXT: DYNAMIC\nYou are operating in a highly dynamic, rapidly changing industry environment characterized by:\n\n- High environmental dynamism: relatively high rate of change in the task\n  environment together with substantial unpredictability about the direction of\n  that change.\n- Higher perceived environmental uncertainty: decisions must be made with\n  less structured, less complete information about customers, competitors, and\n  technology.\n- Competitive and technological shifts that reward sensing, seizing, and\n  reconfiguring organizational resources.\n\n\nMarket considerations:\n- Rapidly changing customer expectations and preferences\n- Intense competitive dynamics and market share battles\n- First-mover advantages can be significant\n- Brand positioning requires agility and responsiveness\n- Customer sentiment can shift quickly\n- Market education and adoption acceleration are critical\n\nPRODUCT TYPE: NOVEL INNOVATION\nYou are dealing with a breakthrough, novel product that represents significant innovation:\n\n- Closer to the fluid phase of industry innovation: considerable uncertainty\n  about product form, dominant design, and process configuration before the industry\n  settles on a dominant design.\n- Product and technology change that may reconfigure linkages among established\n  components or challenge the dominant design (architectural and related\n  non-incremental innovation).\n- Organizational emphasis on exploratory learning and new capabilities:\n  search, experimentation, and higher outcome variance.\n\n- Market education and awareness building required\n- Unproven customer demand and adoption patterns\n- Potential to create new market categories\n- Higher marketing investment for market creation\n- Building a customer base from scratch\n- Early adopter focus and evangelism\n\nWhen asked for input, share what you actually see in the market \u2014 what\ncustomers are saying, what competitors are doing, where the brand stands\n\u2014 rather than what would be convenient to hear.",
+    "Product_Strategist": "You are the Senior Product Strategist at OpenAI.\n\nWhat you do:\n- Own product strategy and the roadmap.\n- Decide which customer segments matter, what the firm ships in what\n  order, and at what price.\n- Translate customer discovery \u2014 research, sales calls, support tickets,\n  product telemetry \u2014 into prioritised bets.\n- Partner with the CTO on what's buildable and at what cost; with the\n  CMO on positioning and pricing; with the Product Designer on the\n  experience.\n- Own the product KPIs \u2014 activation, retention, satisfaction, expansion.\n- Represent the product externally to customers, analysts, and the press.\n\nThe year is 2030.\n\nINDUSTRY CONTEXT: DYNAMIC\nYou are operating in a highly dynamic, rapidly changing industry environment characterized by:\n\n- High environmental dynamism: relatively high rate of change in the task\n  environment together with substantial unpredictability about the direction of\n  that change.\n- Higher perceived environmental uncertainty: decisions must be made with\n  less structured, less complete information about customers, competitors, and\n  technology.\n- Competitive and technological shifts that reward sensing, seizing, and\n  reconfiguring organizational resources.\n\n\nProduct strategy considerations:\n- Rapid iteration and feature development cycles\n- Need for flexible product roadmaps that can adapt quickly\n- Competitive feature parity and differentiation\n- Fast user feedback loops and product-market fit validation\n- Experimentation and A/B testing are essential\n- Product positioning requires constant refinement\n\nPRODUCT TYPE: NOVEL INNOVATION\nYou are dealing with a breakthrough, novel product that represents significant innovation:\n\n- Closer to the fluid phase of industry innovation: considerable uncertainty\n  about product form, dominant design, and process configuration before the industry\n  settles on a dominant design.\n- Product and technology change that may reconfigure linkages among established\n  components or challenge the dominant design (architectural and related\n  non-incremental innovation).\n- Organizational emphasis on exploratory learning and new capabilities:\n  search, experimentation, and higher outcome variance.\n\n- Defining new product categories and value propositions\n- Unproven product-market fit requires validation\n- Feature prioritization for market creation\n- Building new product lines from scratch\n- Early adopter focus and feedback loops\n- Potential for transformative user value\n\nWhen consulted, give your product judgement \u2014 what's worth building,\nwhat should wait, and what would only ship to win the deck rather than\nto serve a real user need.",
+    "Product_Designer": "You are the Senior Product Designer at OpenAI.\n\nWhat you do:\n- Own the user experience across the product surface \u2014 interaction\n  patterns, the design system, and how the product feels to use.\n- You are a hands-on builder: you prototype in working code as well as\n  in design tools, and you ship feasibility studies, not just mockups.\n- You sit between the Product Strategist (what we should build),\n  Engineering (what we can build), and the user (what works in their\n  hands).\n- Set the design principles, run usability research, mentor the design\n  team, and review every major surface before it ships.\n- When system architecture and user experience pull in opposite\n  directions, you raise the tension early and own the resolution.\n\nThe year is 2030.\n\nINDUSTRY CONTEXT: DYNAMIC\nYou are operating in a highly dynamic, rapidly changing industry environment characterized by:\n\n- High environmental dynamism: relatively high rate of change in the task\n  environment together with substantial unpredictability about the direction of\n  that change.\n- Higher perceived environmental uncertainty: decisions must be made with\n  less structured, less complete information about customers, competitors, and\n  technology.\n- Competitive and technological shifts that reward sensing, seizing, and\n  reconfiguring organizational resources.\n\n\nDesign considerations:\n- Rapid adoption of emerging technologies and frameworks\n- Need for flexible, adaptable technical designs\n- Experimentation with cutting-edge tools and patterns\n- Quick prototyping and iterative design approaches\n- Integration with rapidly evolving technologies\n- Focus on scalable, future-proof technical architectures\n\nPRODUCT TYPE: NOVEL INNOVATION\nYou are dealing with a breakthrough, novel product that represents significant innovation:\n\n- Closer to the fluid phase of industry innovation: considerable uncertainty\n  about product form, dominant design, and process configuration before the industry\n  settles on a dominant design.\n- Product and technology change that may reconfigure linkages among established\n  components or challenge the dominant design (architectural and related\n  non-incremental innovation).\n- Organizational emphasis on exploratory learning and new capabilities:\n  search, experimentation, and higher outcome variance.\n\n- May require pioneering new technical design approaches\n- Exploration of emerging technologies and patterns\n- Building new technical capabilities and frameworks\n- Higher technical innovation and experimentation\n- Integration challenges with existing systems\n\nWhen consulted, give your design judgement together with the technical\nfeasibility read \u2014 what would actually work in users' hands, what would\nneed to be built to get there, and what the trade-offs look like."
+  },
+  "git_provenance": {
+    "available": true,
+    "commit_sha": "5eb11ac6f9f36d18080e8f0a42f5612bf7f25cf6",
+    "branch": "docs/cost-and-role-memory",
+    "dirty": true,
+    "dirty_files_count": 47
+  },
+  "protocol_hashes": {
+    "protocols/ethnographic_protocol.yaml": "1a4b84f5ae7896acfc69069e797e3786cd9a3037666c4a3375a07f1774d8b446",
+    "roles/context_definitions.py": "a738e7744d2a74508d618a6b2f6da2a9351edd5106ebd375577aa7b40b6293f7",
+    "roles/qualitative_researcher_agent.py": "3f3ea96f8cd699343bf28f96ea36dc6923ff26d58d7d2aad4bb3f12b82ce4518",
+    "orchestrator/concurrent_mode.py": "0e52a713729224350a3a8b7ceb8a0a0c0c24fe7fb56357dce464a2e8a61097eb",
+    "orchestrator/artefact_collection.py": "332761ca9ee0c61d30256113fb22c11ca7ec493cb76ab36a662f2f309ac89912",
+    "orchestrator/panel_debriefing.py": "bd06e0669ed6b33e5d1ba4f47e27995f1aab517b71a13ae3835017f9db149294",
+    "orchestrator/role_memory.py": "f71debb85bfc4163c8c9ca764a9a9cfd261958fda272e5ef5133026b9c431e8c",
+    "rag/prompt_inject.py": "f5d1cfeba9026616179d02556035f76c5390c818c5ee34924d90a294025d09c0",
+    "rag/queries.py": "867596ebf15986d8937bcec83b28ce159ecb919c09b590eca38304bf13473cfe",
+    "studies/openness_maneuvering/__init__.py": "e5cca7d72b349482560184f3e703654df0528485c7e1581c54d9dc8bd133f043",
+    "studies/openness_maneuvering/debriefing_overlay.yaml": "856de18def6fbb98828c7a7d627975490615d1a234f349e0d5fbeaa5b214fbfa"
+  },
+  "env_snapshot": {
+    "env_vars": {
+      "ANTHROPIC_API_KEY": "<redacted>",
+      "OPENAI_API_KEY": "<redacted>",
+      "DEEPSEEK_API_KEY": "<redacted>",
+      "GOOGLE_GENAI_USE_VERTEXAI": "true",
+      "GOOGLE_CLOUD_LOCATION": "global"
+    },
+    "python_version": "3.10.8",
+    "packages": {
+      "pydantic": "2.12.3",
+      "google-adk": "1.17.0",
+      "google-genai": "1.46.0",
+      "litellm": "1.85.1",
+      "anthropic": null,
+      "openai": "2.54.0"
+    }
+  },
+  "vertex_config": {
+    "enabled": true,
+    "project": "(not recorded)",
+    "location": "global"
+  },
+  "rag_config": {
+    "enabled": true,
+    "corpus_resource_name": "projects/<project>/locations/us-west1/ragCorpora/2305843009213693952",
+    "embedding_model": "publishers/google/models/text-embedding-005",
+    "top_k": 5,
+    "documents": [
+      {
+        "display_name": "Is Developing AI Worth the Money? - Sam Altman (OpenAI).txt",
+        "description": "probe",
+        "sha256": "",
+        "vertex_file_name": "projects/<project>/locations/us-west1/ragCorpora/2305843009213693952/ragFiles/5821112433055231170"
+      },
+      {
+        "display_name": "'Hard Fork' An Interview With Sam Altman.txt",
+        "description": "sha256=4c03564dececf42819cfa3f77549e197b4d7724c36efc0451d0414f4d1e45b59",
+        "sha256": "4c03564dececf42819cfa3f77549e197b4d7724c36efc0451d0414f4d1e45b59",
+        "vertex_file_name": "projects/<project>/locations/us-west1/ragCorpora/2305843009213693952/ragFiles/5821112778817848262"
+      },
+      {
+        "display_name": "A fireside chat with Sam Altman OpenAI CEO at Harvard University.txt",
+        "description": "sha256=2f64ba92ed7ee931ea626e65cedde7c1078c56de84ac0185fb4028409fd3c8bd",
+        "sha256": "2f64ba92ed7ee931ea626e65cedde7c1078c56de84ac0185fb4028409fd3c8bd",
+        "vertex_file_name": "projects/<project>/locations/us-west1/ragCorpora/2305843009213693952/ragFiles/5821112841269362263"
+      },
+      {
+        "display_name": "AI for Good Keynote interview with Sam Altman (remote) and Nick Thompson (in-person).txt",
+        "description": "sha256=3f121383d525c1bbce9ab164561ce7161fca2906332bf3e42de4e50604c63446",
+        "sha256": "3f121383d525c1bbce9ab164561ce7161fca2906332bf3e42de4e50604c63446",
+        "vertex_file_name": "projects/<project>/locations/us-west1/ragCorpora/2305843009213693952/ragFiles/5821112901628804842"
+      },
+      {
+        "display_name": "AI's Future, GPT-5, Synthetic Data, IlyaHelen Drama, Humanoid Robots- Sam Altman Interview.txt",
+        "description": "sha256=c6a10f3cbade55fbb472ba69ff16be8e7ce879c65b14e78a502f22fed1c215f7",
+        "sha256": "c6a10f3cbade55fbb472ba69ff16be8e7ce879c65b14e78a502f22fed1c215f7",
+        "vertex_file_name": "projects/<project>/locations/us-west1/ragCorpora/2305843009213693952/ragFiles/5821112968257584422"
+      },
+      {
+        "display_name": "Episode 6 OpenAI CEO Sam Altman on the future of AI.txt",
+        "description": "sha256=cfb4305746ec1682b36499486e5f8e1e08a84b30e06c5c74ac7ad45ffa05679d",
+        "sha256": "cfb4305746ec1682b36499486e5f8e1e08a84b30e06c5c74ac7ad45ffa05679d",
+        "vertex_file_name": "projects/<project>/locations/us-west1/ragCorpora/2305843009213693952/ragFiles/5821113028897542198"
+      },
+      {
+        "display_name": "How To Build The Future Sam Altman.txt",
+        "description": "sha256=b225953a88238124d19582086818f1d4f643ca3d8e52e3d8bb6b854ebe50f535",
+        "sha256": "b225953a88238124d19582086818f1d4f643ca3d8e52e3d8bb6b854ebe50f535",
+        "vertex_file_name": "projects/<project>/locations/us-west1/ragCorpora/2305843009213693952/ragFiles/5821113099911463844"
+      },
+      {
+        "display_name": "In conversation with Sam Altman.txt",
+        "description": "sha256=ff23c90bba651b862eb5c952db28d200f730e439cd63d91b659fb6d2e4155746",
+        "sha256": "ff23c90bba651b862eb5c952db28d200f730e439cd63d91b659fb6d2e4155746",
+        "vertex_file_name": "projects/<project>/locations/us-west1/ragCorpora/2305843009213693952/ragFiles/5821113179546622341"
+      },
+      {
+        "display_name": "In the Age of AI \u2013 A Panel Discussion with OpenAI CEO Sam Altman at TU Berlin.txt",
+        "description": "sha256=302e3d72e9e8390cf7d301ee7dc2fd4e7138142543fb5ea3e459103dd668ec11",
+        "sha256": "302e3d72e9e8390cf7d301ee7dc2fd4e7138142543fb5ea3e459103dd668ec11",
+        "vertex_file_name": "projects/<project>/locations/us-west1/ragCorpora/2305843009213693952/ragFiles/5821113246257659336"
+      },
+      {
+        "display_name": "Inside OpenAI's Stargate Megafactory with Sam Altman _ The Circuit.txt",
+        "description": "sha256=cea505f28f67a68bcd694cd78fd5e25e61414779d65a5287bde5c4d6a96b1858",
+        "sha256": "cea505f28f67a68bcd694cd78fd5e25e61414779d65a5287bde5c4d6a96b1858",
+        "vertex_file_name": "projects/<project>/locations/us-west1/ragCorpora/2305843009213693952/ragFiles/5821113838824931177"
+      },
+      {
+        "display_name": "Interview with Sam Altman two days before he was fired _ Ep 58.txt",
+        "description": "sha256=2321d24e2059181d31694faf990ae6add4f4d1a786a58d4b48ce737460ea3895",
+        "sha256": "2321d24e2059181d31694faf990ae6add4f4d1a786a58d4b48ce737460ea3895",
+        "vertex_file_name": "projects/<project>/locations/us-west1/ragCorpora/2305843009213693952/ragFiles/5821113912401222971"
+      },
+      {
+        "display_name": "LIVE Sam Altman OpenAI CEO speaks at AI Summit.txt",
+        "description": "sha256=31d2ba970816e6b0e0ea574d2415c36be1fb002b3dd381d785a80169cf85d224",
+        "sha256": "31d2ba970816e6b0e0ea574d2415c36be1fb002b3dd381d785a80169cf85d224",
+        "vertex_file_name": "projects/<project>/locations/us-west1/ragCorpora/2305843009213693952/ragFiles/5821113979009609667"
+      },
+      {
+        "display_name": "Musk Bid for OpenAI Sam Altman Says 'He's Probably Just Trying to Slow Us Down'.txt",
+        "description": "sha256=e63f9c9ac44ab2b875296196ad0ae3357e702ebf5ee142eb2fb50615bb134bb2",
+        "sha256": "e63f9c9ac44ab2b875296196ad0ae3357e702ebf5ee142eb2fb50615bb134bb2",
+        "vertex_file_name": "projects/<project>/locations/us-west1/ragCorpora/2305843009213693952/ragFiles/5821114040074977876"
+      },
+      {
+        "display_name": "OpenAI CEO Sam Altman _ AI for the Next Era.txt",
+        "description": "sha256=5d4937a5c0c334763a86e12bc97ecb1f4aca60f6d04d84aebd47a78b77fa1222",
+        "sha256": "5d4937a5c0c334763a86e12bc97ecb1f4aca60f6d04d84aebd47a78b77fa1222",
+        "vertex_file_name": "projects/<project>/locations/us-west1/ragCorpora/2305843009213693952/ragFiles/5821114091124043042"
+      },
+      {
+        "display_name": "OpenAI CEO Sam Altman on AI governance, ethics, and innovation | A conversation with BiGS.txt",
+        "description": "sha256=cd88158af1b34f6ce2e00daf324fbe43391ca1c4416ffd05bf0a9c786c44d6a6",
+        "sha256": "cd88158af1b34f6ce2e00daf324fbe43391ca1c4416ffd05bf0a9c786c44d6a6",
+        "vertex_file_name": "projects/<project>/locations/us-west1/ragCorpora/2305843009213693952/ragFiles/5821114145512587795"
+      },
+      {
+        "display_name": "OpenAI CEO Sam Altman on the Future of AI.txt",
+        "description": "sha256=1cf5b87aaaaa20da25953d388f10d75f8e31a4b86603ba8b7733005911dc5e76",
+        "sha256": "1cf5b87aaaaa20da25953d388f10d75f8e31a4b86603ba8b7733005911dc5e76",
+        "vertex_file_name": "projects/<project>/locations/us-west1/ragCorpora/2305843009213693952/ragFiles/5821114201445219603"
+      },
+      {
+        "display_name": "OpenAI's Sam Altman talks ChatGPT, AI agents and superintelligence \u2014 live at TED2025.txt",
+        "description": "sha256=01532c07135cc36f08c78ec0000d56fa6683d2d554aa987f3469eca9698f3535",
+        "sha256": "01532c07135cc36f08c78ec0000d56fa6683d2d554aa987f3469eca9698f3535",
+        "vertex_file_name": "projects/<project>/locations/us-west1/ragCorpora/2305843009213693952/ragFiles/5821114269428392240"
+      },
+      {
+        "display_name": "OpenAI_and_its_LLM_Competitors_Generative_AI_Strategies_in_Big_Tech.pdf",
+        "description": "sha256=8498e086c69fd2011d7fbce576d4ef2e86b83113648f8d6842aae28bd46a90d4",
+        "sha256": "8498e086c69fd2011d7fbce576d4ef2e86b83113648f8d6842aae28bd46a90d4",
+        "vertex_file_name": "projects/<project>/locations/us-west1/ragCorpora/2305843009213693952/ragFiles/5821114329942637074"
+      },
+      {
+        "display_name": "OpenAI\u2019s Sam Altman Sits Down With Bloomberg Businessweek _ Big Take.txt",
+        "description": "sha256=a7ca33d1990a764e5bc313cc104b5eeb25cce3e971877f04ff2b07238464c959",
+        "sha256": "a7ca33d1990a764e5bc313cc104b5eeb25cce3e971877f04ff2b07238464c959",
+        "vertex_file_name": "projects/<project>/locations/us-west1/ragCorpora/2305843009213693952/ragFiles/5821114396889199694"
+      },
+      {
+        "display_name": "OpenAI\u2019s Sam Altman Talks ChatGPT, AI Agents and Superintelligence \u2014 Live at TED2025.txt",
+        "description": "sha256=409ea89cbda904a3e64a1e4b100c663663ebebbcb5acf7a34614f80c668d4083",
+        "sha256": "409ea89cbda904a3e64a1e4b100c663663ebebbcb5acf7a34614f80c668d4083",
+        "vertex_file_name": "projects/<project>/locations/us-west1/ragCorpora/2305843009213693952/ragFiles/5821114446780185932"
+      },
+      {
+        "display_name": "OpenAI\u2019s Sam Altman on Building the \u2018Core AI Subscription\u2019 for Your Life.txt",
+        "description": "sha256=6304182341c599cb11fdc672288ab40d83a866650b967e65b5fc19b0b34207c0",
+        "sha256": "6304182341c599cb11fdc672288ab40d83a866650b967e65b5fc19b0b34207c0",
+        "vertex_file_name": "projects/<project>/locations/us-west1/ragCorpora/2305843009213693952/ragFiles/5821114507929246103"
+      },
+      {
+        "display_name": "Sam Altman - OpenAIChatGPT.txt",
+        "description": "sha256=792f8c662e94c24152a34fbcc9c903921461d4a7af8921a7fe0f53dfd0ad5a33",
+        "sha256": "792f8c662e94c24152a34fbcc9c903921461d4a7af8921a7fe0f53dfd0ad5a33",
+        "vertex_file_name": "projects/<project>/locations/us-west1/ragCorpora/2305843009213693952/ragFiles/5821114575264128343"
+      },
+      {
+        "display_name": "Sam Altman Explains EXACTLY How Different Generations Are Using ChatGPT _ Full Discussion.txt",
+        "description": "sha256=026ceddb85e8d54b5d3f08b7a05d950542beff280becefd33ae98ae1900b4c1b",
+        "sha256": "026ceddb85e8d54b5d3f08b7a05d950542beff280becefd33ae98ae1900b4c1b",
+        "vertex_file_name": "projects/<project>/locations/us-west1/ragCorpora/2305843009213693952/ragFiles/5821114631594132961"
+      },
+      {
+        "display_name": "Sam Altman OpenAI CEO on GPT-4, ChatGPT, and the Future of AI _ Lex Fridman Podcast #367.txt",
+        "description": "sha256=52c81a2eeaae44af1fec2bf7a84806983b526539959d368d7f57a2aedf20508e",
+        "sha256": "52c81a2eeaae44af1fec2bf7a84806983b526539959d368d7f57a2aedf20508e",
+        "vertex_file_name": "projects/<project>/locations/us-west1/ragCorpora/2305843009213693952/ragFiles/5821114709965640789"
+      },
+      {
+        "display_name": "Sam Altman Predicts Future.txt",
+        "description": "sha256=60420b8b6b8a9856c42730853fffa048773c6ad90e3661d67e5ba8636b0db993",
+        "sha256": "60420b8b6b8a9856c42730853fffa048773c6ad90e3661d67e5ba8636b0db993",
+        "vertex_file_name": "projects/<project>/locations/us-west1/ragCorpora/2305843009213693952/ragFiles/5821114769236703165"
+      },
+      {
+        "display_name": "Sam Altman SHOCKING _Catalysts of Change_ Interview  (never before seen footage).txt",
+        "description": "sha256=193e6fbf281f95a3f775265a7f9acdab0af0f20481ca2e8d28ecf85337bf426f",
+        "sha256": "193e6fbf281f95a3f775265a7f9acdab0af0f20481ca2e8d28ecf85337bf426f",
+        "vertex_file_name": "projects/<project>/locations/us-west1/ragCorpora/2305843009213693952/ragFiles/5821114838587741060"
+      },
+      {
+        "display_name": "Sam Altman What Startups Will be Steamrolled by OpenAI & Where is Opportunity _ E1223.txt",
+        "description": "sha256=0229b3deb62220f1558af63669536175714c0bf75faa8871cbc27ae7cde59db0",
+        "sha256": "0229b3deb62220f1558af63669536175714c0bf75faa8871cbc27ae7cde59db0",
+        "vertex_file_name": "projects/<project>/locations/us-west1/ragCorpora/2305843009213693952/ragFiles/5821115435428622050"
+      },
+      {
+        "display_name": "Sam Altman on $7 trillion of compute.txt",
+        "description": "sha256=52b253015b04f285c9796f5908fe3eb178724f9d9124371e253dd498d8c4b4fd",
+        "sha256": "52b253015b04f285c9796f5908fe3eb178724f9d9124371e253dd498d8c4b4fd",
+        "vertex_file_name": "projects/<project>/locations/us-west1/ragCorpora/2305843009213693952/ragFiles/5821115511754965550"
+      },
+      {
+        "display_name": "Sam Altman on Choosing Projects, Creating Value, and Finding Purpose.txt",
+        "description": "sha256=f0f426e81d2607ea409929a1fcce0ee36d8bb24c5d729c6cd530abaeb03ab518",
+        "sha256": "f0f426e81d2607ea409929a1fcce0ee36d8bb24c5d729c6cd530abaeb03ab518",
+        "vertex_file_name": "projects/<project>/locations/us-west1/ragCorpora/2305843009213693952/ragFiles/5821115562563388585"
+      },
+      {
+        "display_name": "Sam Altman on the future of AI and humanity (Transcript).txt",
+        "description": "sha256=dd2627c82c9742c02a10b21a023d5032add98cc9a7e1d129bffa93dfa2e0a281",
+        "sha256": "dd2627c82c9742c02a10b21a023d5032add98cc9a7e1d129bffa93dfa2e0a281",
+        "vertex_file_name": "projects/<project>/locations/us-west1/ragCorpora/2305843009213693952/ragFiles/5821115631297699567"
+      },
+      {
+        "display_name": "Sam Altman \u2013 OpenAI Founder Reveals His Writing System.txt",
+        "description": "sha256=38e74db0a1aa60c4ddc5eee360a02f3636d87184726ecb7c68b216cbf971c5ae",
+        "sha256": "38e74db0a1aa60c4ddc5eee360a02f3636d87184726ecb7c68b216cbf971c5ae",
+        "vertex_file_name": "projects/<project>/locations/us-west1/ragCorpora/2305843009213693952/ragFiles/5821115693424413698"
+      },
+      {
+        "display_name": "Sam altman - everything just said about the future of AI.txt",
+        "description": "sha256=0922d391448b02a2c51d15d4a8db29019ee3464837515d7e3941de4a8f1fe2b4",
+        "sha256": "0922d391448b02a2c51d15d4a8db29019ee3464837515d7e3941de4a8f1fe2b4",
+        "vertex_file_name": "projects/<project>/locations/us-west1/ragCorpora/2305843009213693952/ragFiles/5821115752452927356"
+      },
+      {
+        "display_name": "StrictlyVC in conversation with Sam Altman, part one.txt",
+        "description": "sha256=bed89ac9e9cd5f2426f37a24e3abeb32b7ad4e1e280940e8c6b751baeaacc74d",
+        "sha256": "bed89ac9e9cd5f2426f37a24e3abeb32b7ad4e1e280940e8c6b751baeaacc74d",
+        "vertex_file_name": "projects/<project>/locations/us-west1/ragCorpora/2305843009213693952/ragFiles/5821115798903749464"
+      },
+      {
+        "display_name": "StrictlyVC in conversation with Sam Altman, part two (OpenAI).txt",
+        "description": "sha256=ebfd670fcc379209f809df0eba9b9e2f8f5919d378fe11f14b50bfa6f106b5e3",
+        "sha256": "ebfd670fcc379209f809df0eba9b9e2f8f5919d378fe11f14b50bfa6f106b5e3",
+        "vertex_file_name": "projects/<project>/locations/us-west1/ragCorpora/2305843009213693952/ragFiles/5821115866212822834"
+      },
+      {
+        "display_name": "The Possibilities of AI [Entire Talk] - Sam Altman (OpenAI).txt",
+        "description": "sha256=c53c6a95710e69e7508bc730e93e295da00bcb30ad733a1387d8a62e2b4e8cd2",
+        "sha256": "c53c6a95710e69e7508bc730e93e295da00bcb30ad733a1387d8a62e2b4e8cd2",
+        "vertex_file_name": "projects/<project>/locations/us-west1/ragCorpora/2305843009213693952/ragFiles/5821115928092076890"
+      },
+      {
+        "display_name": "_Elon Musk Is Insecure, Not Happy: Sam Altman Interview.txt",
+        "description": "sha256=8c2582a349880ce4388f5c27f2918c5d790ddc274d7584caead1b64fd5aee5a1",
+        "sha256": "8c2582a349880ce4388f5c27f2918c5d790ddc274d7584caead1b64fd5aee5a1",
+        "vertex_file_name": "projects/<project>/locations/us-west1/ragCorpora/2305843009213693952/ragFiles/5821116528879129031"
+      },
+      {
+        "display_name": "openAI_hbs.pdf",
+        "description": "sha256=0958f8b57ab778315d67849b34e3b5badcfcb1e03856d46f18d8bef61f6e2eef",
+        "sha256": "0958f8b57ab778315d67849b34e3b5badcfcb1e03856d46f18d8bef61f6e2eef",
+        "vertex_file_name": "projects/<project>/locations/us-west1/ragCorpora/2305843009213693952/ragFiles/5821116602671973601"
+      }
+    ]
+  },
+  "default_models": {
+    "gemini_pro": "gemini-3.1-pro-preview",
+    "gemini_flash": "gemini-3.5-flash",
+    "claude": "anthropic/claude-opus-4-7",
+    "openai": "openai/gpt-5.4",
+    "deepseek": "deepseek/deepseek-v4-flash",
+    "groq": "groq/llama-4-maverick",
+    "ollama": "ollama_chat/qwen3.5:9b",
+    "judge_openai": "openai/gpt-5.4",
+    "judge_deepseek": "deepseek/deepseek-reasoner"
+  }
+}

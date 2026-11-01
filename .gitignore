@@ -1,0 +1,47 @@
+__pycache__
+.env
+.env.*
+!.env.example
+.claude/
+.DS_Store
+results/runs/
+results/smoke/
+results/provenance/
+results/panel_probes/
+results/debrief_replays/
+results/turn_tests/
+results/comparisons/
+# Any ad-hoc artefacts an operator drops directly in results/ (e.g. a
+# generated docx for sharing with collaborators) — keep them local-only,
+# don't ship via the repo. The per-run subfolders are already covered
+# above.
+results/*.docx
+results/*.pdf
+results/*.xlsx
+
+# RAG source documents are firm-specific reference material (annual
+# reports, podcast transcripts, founder essays). They're often under
+# publisher copyright and they're not part of the framework — the PI
+# drops them locally per `rag_corpora/README.md`. The folder structure
+# (README + per-firm .gitkeep files) is committed; the actual source
+# docs are not.
+rag_corpora/*/*.md
+rag_corpora/*/*.txt
+rag_corpora/*/*.pdf
+rag_corpora/*/*.docx
+rag_corpora/*/*.html
+rag_corpora/*/*.rtf
+rag_corpora/*/**/*.md
+rag_corpora/*/**/*.txt
+rag_corpora/*/**/*.pdf
+rag_corpora/*/**/*.docx
+rag_corpora/*/**/*.html
+rag_corpora/*/**/*.rtf
+
+
+# Case-study drafts (Google, Meta) — local-only.
+results/case_studies/
+
+# IDE settings and personal Claude instructions (machine-specific; keep local).
+.idea/
+CLAUDE.local.md

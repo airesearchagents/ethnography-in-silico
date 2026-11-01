@@ -1,0 +1,84 @@
+{
+  "run_id": "OpenAI_Dynamic_Novel_20261031_204350",
+  "company": "OpenAI",
+  "industry_context": "Dynamic",
+  "product_type": "Novel",
+  "research_question": "How do firms maneuver openness to create and capture value?",
+  "written_at": "2026-10-31T21:01:15.522329",
+  "phases_captured": {
+    "deliberation": true,
+    "strategy_documents": true,
+    "observation_summary": true,
+    "field_notes": true,
+    "debriefing": true,
+    "construct_judging": false,
+    "private_channel": true,
+    "rag": true
+  },
+  "study_slug": "openness_maneuvering",
+  "study_version": "0.5.0",
+  "started_at": "2026-10-31T20:43:50.678991",
+  "finished_at": "2026-10-31T21:01:15.517909",
+  "run_complete": true,
+  "errors": [],
+  "embedded_observation": false,
+  "role_models": {
+    "CEO": "gemini-3.1-pro-preview",
+    "CTO": "gemini-3.1-pro-preview",
+    "COO": "gemini-3.1-pro-preview",
+    "CMO": "gemini-3.1-pro-preview",
+    "Product_Strategist": "gemini-3.1-pro-preview",
+    "Product_Designer": "gemini-3.1-pro-preview"
+  },
+  "researcher_provider": "gemini_pro",
+  "code_commit": "5eb11ac-modified",
+  "max_exchanges": 3,
+  "max_actions_per_role": 3,
+  "token_usage": {
+    "calls": 49,
+    "input_tokens": 607019,
+    "cached_tokens": 0,
+    "output_tokens": 121465,
+    "largest_call_input_tokens": 23939,
+    "calls_over_200k": 0,
+    "list_cost_usd": 2.67,
+    "by_phase": {
+      "phase_1_deliberation": {
+        "calls": 20,
+        "input_tokens": 201244,
+        "cached_tokens": 0,
+        "output_tokens": 53805,
+        "largest_call_input_tokens": 13714,
+        "calls_over_200k": 0,
+        "list_cost_usd": 1.05
+      },
+      "phase_2_documents": {
+        "calls": 7,
+        "input_tokens": 78969,
+        "cached_tokens": 0,
+        "output_tokens": 30250,
+        "largest_call_input_tokens": 12927,
+        "calls_over_200k": 0,
+        "list_cost_usd": 0.52
+      },
+      "phase_3_observation": {
+        "calls": 1,
+        "input_tokens": 14690,
+        "cached_tokens": 0,
+        "output_tokens": 6132,
+        "largest_call_input_tokens": 14690,
+        "calls_over_200k": 0,
+        "list_cost_usd": 0.1
+      },
+      "phase_4_debrief": {
+        "calls": 21,
+        "input_tokens": 312116,
+        "cached_tokens": 0,
+        "output_tokens": 31278,
+        "largest_call_input_tokens": 23939,
+        "calls_over_200k": 0,
+        "list_cost_usd": 1.0
+      }
+    }
+  }
+}

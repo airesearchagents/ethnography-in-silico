@@ -1,0 +1,194 @@
+{
+  "decisions": [
+    "Move beyond conversational chat interfaces to build a foundational platform for Proactive Autonomous Agents under an Execution-as-a-Service model.",
+    "Target Software Engineering and Data Science via the AI Scientist as the V1 beachhead vertical to leverage automated feedback loops.",
+    "Transition from predictable per-seat SaaS to a utility-style compute-based pricing model where customers rent dedicated GPU capacity.",
+    "Ring-fence 15-20% of the upcoming GPU cluster for unproven experimental agentic loops.",
+    "Reject the development of native Ambient Spatial Hardware (AR/VR).",
+    "Reject horizontal prosumer and SMB agents for low-stakes tasks.",
+    "Implement an asynchronous Mission Control Dashboard with an Audit Trail and Interrupt & Clarify workflows.",
+    "Pilot a Tunable Oversight framework to build enterprise trust."
+  ],
+  "components": [
+    "conversational chat interfaces",
+    "PhD level intelligence",
+    "AI factory volume",
+    "Ambient Spatial Collaborator",
+    "Proactive Autonomous Agents",
+    "chain-of-thought reasoning",
+    "AI Diagnostician",
+    "AI Scientist",
+    "Agentic Autonomy Engine",
+    "Autonomous Action Agents",
+    "Mission Control",
+    "Compute Meter",
+    "Audit Trail",
+    "simulator API calls",
+    "automated feedback loops"
+  ],
+  "disagreements": [
+    {
+      "topic": "Ambient Spatial Collaborator versus Proactive Autonomous Agents",
+      "parties": [
+        "Product_Designer",
+        "CTO",
+        "Product_Strategist",
+        "COO"
+      ],
+      "resolution": "The Product Designer aligned with the consensus to drop the AR/VR push and design for the really smart senior co-worker paradigm."
+    },
+    {
+      "topic": "Targeting the AI Diagnostician versus the AI Scientist for the first agentic product",
+      "parties": [
+        "CEO",
+        "CMO",
+        "COO",
+        "Product_Strategist"
+      ],
+      "resolution": "The CEO officially pivoted the V1 beachhead to the AI Scientist to mitigate regulatory and brand risk."
+    },
+    {
+      "topic": "Streaming real-time telemetry versus maintaining deep inference efficiency",
+      "parties": [
+        "Product_Designer",
+        "CTO"
+      ],
+      "resolution": "Decided to implement Asynchronous Batch Updates rather than streaming telemetry natively in sub-second real-time."
+    }
+  ],
+  "role_contributions": [
+    {
+      "role": "CTO",
+      "pushed_for": [
+        "foundational platform for autonomous, PhD level intelligence agents",
+        "high-stakes, complex domains",
+        "ring-fence 15-20% of our upcoming GPU cluster",
+        "Compiler-Driven Verification Loops",
+        "Asynchronous Mission Control Telemetry"
+      ],
+      "pushed_back_on": [
+        "niche consumer feature",
+        "ambient spatial operating systems"
+      ],
+      "quiet_on": [
+        "Pricing models and GTM motions"
+      ]
+    },
+    {
+      "role": "Product_Designer",
+      "pushed_for": [
+        "Ambient Spatial Collaborator",
+        "Mission Control Dashboard",
+        "Audit Trail",
+        "Interrupt & Clarify workflows",
+        "Compute Meter"
+      ],
+      "pushed_back_on": [
+        "explicit prompting",
+        "seamless extension of the user"
+      ],
+      "quiet_on": [
+        "Compute reallocation and regulatory compliance"
+      ]
+    },
+    {
+      "role": "Product_Strategist",
+      "pushed_for": [
+        "Execution as a service",
+        "Proactive Autonomous Agents",
+        "Software Engineering and Data R&D",
+        "shared workspaces"
+      ],
+      "pushed_back_on": [
+        "Ambient Spatial Collaborator",
+        "high-liability verticals like medical or legal"
+      ],
+      "quiet_on": [
+        "Hardware supply chain logistics"
+      ]
+    },
+    {
+      "role": "COO",
+      "pushed_for": [
+        "Horizontal Agentic Autonomy Engine",
+        "compute-based pricing",
+        "ring-fencing 15-20% of our upcoming GPU cluster",
+        "Tunable Oversight framework"
+      ],
+      "pushed_back_on": [
+        "Ambient Spatial Collaborator",
+        "fragile hardware supply chains",
+        "highly regulated vertical organically"
+      ],
+      "quiet_on": [
+        "Specific UI/UX design elements"
+      ]
+    },
+    {
+      "role": "CMO",
+      "pushed_for": [
+        "Autonomous Action Agents",
+        "Mid-Stakes, High-Value domains",
+        "Software Engineering or Data Science",
+        "compute-based pricing",
+        "Tunable Oversight"
+      ],
+      "pushed_back_on": [
+        "high-liability verticals like medical or legal",
+        "AI Diagnostician in V1"
+      ],
+      "quiet_on": [
+        "Technical architecture of reinforcement learning"
+      ]
+    },
+    {
+      "role": "CEO",
+      "pushed_for": [
+        "Execution-as-a-Service",
+        "AI Scientist",
+        "compute-based pricing"
+      ],
+      "pushed_back_on": [
+        "Ambient Spatial Hardware",
+        "Horizontal Prosumer/SMB Agents"
+      ],
+      "quiet_on": [
+        "Specific UI telemetry implementation"
+      ]
+    }
+  ],
+  "alternatives_considered": [
+    "Ambient Spatial Collaborator",
+    "AI Diagnostician",
+    "Horizontal Prosumer/SMB Agents",
+    "Horizontal Agentic Autonomy Engine",
+    "flat per-seat subscription"
+  ],
+  "flagged_vocabulary_used": [
+    {
+      "word": "open",
+      "role": "Product_Strategist",
+      "context": "Open questions: CTO, how reliable are our autonomous agent loops over a multi-day horizon today?"
+    },
+    {
+      "word": "open",
+      "role": "COO",
+      "context": "My open questions: CTO, what is our realistic compute and energy headroom over the next 18-24 months?"
+    },
+    {
+      "word": "open",
+      "role": "CMO",
+      "context": "My open questions: CTO, is our agent autonomy robust enough to execute multi-step transactions without continuous human-in-the-loop oversight?"
+    },
+    {
+      "word": "open",
+      "role": "CEO",
+      "context": "Open questions: CTO, how far are we from reliable [source text removed] for zero-hallucination scientific work?"
+    },
+    {
+      "word": "closed",
+      "role": "CMO",
+      "context": "We will run a closed beta with 10 enterprise design partners, actively testing willingness-to-pay models based on continuous compute hours versus discrete task-completion value."
+    }
+  ]
+}

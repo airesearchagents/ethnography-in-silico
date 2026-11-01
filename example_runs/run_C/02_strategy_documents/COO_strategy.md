@@ -1,0 +1,69 @@
+# COO — Strategy Document
+## Operating Plan: Enterprise Autonomous Orchestrator Pilot & Scale-up
+**Company:** OpenAI
+**Cell:** Dynamic / Novel
+
+---
+
+## Key challenges
+- Current billing and CPQ (Configure, Price, Quote) infrastructure is rigidly built for token APIs and flat-seat SaaS, rendering it incapable of handling variable, execution-based autonomous compute consumption.
+- Ensuring the compute demands of persistent, multi-day autonomous agents do not cannibalize production resources or violate core API SLAs.
+- Navigating the legal and operational liability of deploying agents capable of taking actions in enterprise environments, particularly around state management and catastrophic drift.
+- Supporting two divergent enterprise personas (CIO vs. VP R&D) with a highly constrained operational and deployment footprint.
+
+## Main decisions
+- Deploy manual, bespoke flat-rate contracts for the 2-3 pilot design partners to bypass current billing limitations, deferring automated variable-billing infrastructure until unit economics are proven.
+- Strictly cap the pilot at a maximum of 3 partners and operationally ring-fence the required compute from the existing R&D buffer, instituting hard operational circuit breakers.
+- Authorize testing across both CIO and VP of R&D personas (as requested by Product Strategy), strictly on the condition that both cohorts accept identical operational SLAs and unified legal frameworks to avoid bespoke redlining.
+- Establish a cross-functional 'Pilot Swarm Team' (Ops, Legal, Eng, Design) holding daily incident/telemetry standups to manage white-glove onboarding and manual intervention.
+
+## Key tensions
+- Agility vs. Scalability: Resorting to manual, unscalable billing processes (doing things that don't scale) to immediately launch pilots versus delaying market entry to build automated infrastructure.
+- Innovation Velocity vs. Resource Protection: Borrowing from the R&D compute buffer to run enterprise production pilots versus risking core R&D roadmap velocity and production stability.
+- Experimental Breadth vs. Operational Focus: Accommodating the Product Strategist's need to test two distinct buyer personas versus concentrating our highly limited operations and support resources on a single vertical.
+
+---
+
+## Body
+
+# Operations Strategy: Enterprise Autonomous Orchestrator
+
+## 1. Executive Summary
+We are pivoting into a highly dynamic, novel product category: the Enterprise Autonomous Orchestrator. From an operational standpoint, this represents a fundamental shift in our delivery model. We are moving from a low-latency, stateless API provider to an asynchronous, stateful, and persistent workflow executor. 
+
+The operational reality is that our existing infrastructure—specifically billing, legal liability frameworks, and compute provisioning—is not built for this. Therefore, our operating strategy is defined by a two-phased approach: a **Scaffolding Phase** (the 6-week pilot) where we will do things that explicitly do not scale, followed by a **Hardening Phase** (Post-Gate 2) where we will mechanize the proven workflows.
+
+## 2. Immediate Operational Footprint (The 6-Week Pilot)
+To execute the CEO's mandate of a 6-week, 2-3 partner pilot, Operations is implementing the following framework:
+
+### 2.1 Revenue Operations & Billing
+As I flagged in the deliberation, our billing systems are hardwired for token consumption and SaaS seats. An autonomous agent that spins up varied compute loads over a 72-hour workflow breaks our current CPQ.
+*   **Action:** We are bypassing the billing engine entirely for the pilot. 
+*   **Execution:** We will execute manual, flat-rate, bespoke contracts for the 2-3 design partners. We will treat these partners as R&D co-sponsors rather than traditional SaaS customers. 
+*   **Discovery:** We do not yet know the cost floor or the margin profile of variable-compute orchestration. We plan to discover the precise compute burn rates during this pilot, which will inform the variable pricing model we build in Phase 2.
+
+### 2.2 Compute Allocation & Protection
+Deploying multi-day agents is a high-variance compute bet. We cannot allow runaway pilot processes to impact our core API SLAs.
+*   **Action:** We are ring-fencing a dedicated compute enclave diverted from the R&D allocation.
+*   **Execution:** Operations and Engineering will implement a hard "circuit breaker" policy. If the pilot compute touches 90% of the ring-fenced allocation, the Orchestrator will default to a suspended state (requiring human-in-the-loop approval via the Product Designer's Asynchronous Command Center) to prevent spillover into production clusters.
+
+## 3. Addressing Partner Selection (Response to Product Strategist)
+The Product Strategist has asked whether Operations can support testing two distinct buyer personas—the CIO (cost displacement) and the VP of R&D (time-to-discovery)—during this constrained pilot.
+
+*   **Operational Stance:** Yes, we can support one partner from each segment, **but with a strict operational caveat**. 
+*   **The Constraint:** While the use cases and UX telemetry may differ, the underlying Legal Master Services Agreement (MSA), liability waivers, and operational SLA guarantees *must be identical* across all 3 partners. We do not have the operational or legal bandwidth to negotiate bespoke liability redlines for different verticals in a 6-week window. If the VP of R&D prospect requires heavy custom compliance (e.g., specific HIPAA or proprietary data indemnification that differs from the CIO prospect), we will be forced to drop them from this pilot batch. Speed is our priority.
+
+## 4. Operational Risk & Governance
+We are deploying software that takes autonomous action in an enterprise environment. The risk of catastrophic drift or destructive execution is non-zero.
+
+*   **Pilot Swarm Team:** I am standing up a temporary cross-functional operations desk. Representatives from Legal, Core Ops, Engineering (CTO), and Design will hold a daily 15-minute standup to review the telemetry from the Asynchronous Command Center. 
+*   **Liability:** We are operating under the assumption that the agent *will* fail. The operational mandate is that failures must fail *safely*. The approval gates designed by the UX team are not just product features; they are operational liability shields. 
+
+## 5. The Path to Scale (Decisions for Post-Gate 2 Re-examination)
+If the 6-week pilot proves willingness-to-pay and validates the CIO/VP R&D wedge, Operations will need 60-90 days to refactor our operating model for general availability (GA):
+
+1.  **Vendor / Infrastructure Renegotiation:** We will need to forecast autonomous compute loads and renegotiate our cloud provisioning to secure deeper discounts on sustained, rather than burst, compute.
+2.  **Billing Architecture:** RevOps will need to procure or build a new CPQ system capable of metering complex, asynchronous variable compute.
+3.  **Customer Success (CS) Redesign:** Our CS motion will need to shift from "API troubleshooting" to "Workflow Architecture Consulting." This will require a distinct hiring plan targeting solutions architects rather than traditional support agents.
+
+For now, we embrace the operational friction. The Scaffolding Phase is locked. Operations is ready to deploy.

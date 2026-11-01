@@ -1,0 +1,74 @@
+# CEO — Strategy Document
+## Board Memorandum: Strategic Direction for Enterprise Autonomous Agents
+**Company:** OpenAI
+**Cell:** Dynamic / Novel
+
+---
+
+## Key challenges
+- Transitioning the product paradigm from synchronous conversational chatbots to asynchronous, multi-day autonomous execution engines.
+- Containing extreme backend compute costs (estimated at 100x-500x of standard chat workloads) inherent to unconstrained reasoning agents.
+- Mitigating the technical risks of chain-of-thought state drift and hallucination loops in long-horizon tasks.
+- Designing a UX that maintains human trust despite multi-second latency requirements when re-hydrating context during human-in-the-loop approvals.
+- Transitioning our monetization strategy from traditional SaaS per-seat licensing to value-based pricing centered on labor replacement.
+
+## Main decisions
+- Build the 'Enterprise Autonomous Action Engine' positioned as a 'smart senior co-worker' capable of multi-day task execution.
+- Launch V1 exclusively as a tightly constrained vertical wedge (Finance or Legal) rather than a generalized horizontal platform.
+- Shift the enterprise monetization model to outcome-based or value-based pricing mapped to the economic value of the labor being augmented/replaced.
+- Halt V1 development of generalized horizontal agent frameworks to avoid catastrophic brand risk from early hallucination loops.
+- Decline near-term integration into native consumer ambient hardware (AR/VR) due to immature ecosystems and rigid cost structures.
+
+## Key tensions
+- Horizontal Scale vs. Vertical Safety: Our ultimate ambition is a horizontal API ecosystem, but launching unconstrained agents exposes us to runaway compute and brand-damaging hallucination loops. We are trading immediate TAM for safe, constrained learning in a single vertical.
+- Labor-Replacement Pricing vs. Margin Predictability: Pricing based on the value of labor replaced drastically increases our revenue ceiling, but decoupling price from API usage exposes us to unbounded backend compute consumption if users abuse asynchronous tasks.
+- Radical Autonomy vs. UX Friction: We want agents to act independently, but current architecture requires multi-second delays to re-hydrate context when looping humans in for approval. We must intentionally design UX friction (loading states) to manage expectations rather than hiding the complexity.
+
+---
+
+## Body
+
+MEMORANDUM
+
+TO: OpenAI Board of Directors
+FROM: Chief Executive Officer
+SUBJECT: Strategic Product Direction: Enterprise Autonomous Agents
+
+### 1. STRATEGIC DIRECTION
+Our core LLM layer is commoditizing faster than anticipated. To maintain our first-mover advantage and build a highly defensible, long-term business, we must move decisively up the stack. We are shifting our enterprise strategy from assisting labor (the conversational "co-pilot" paradigm) to augmenting and executing it autonomously. 
+
+We will build and bring to market an **Enterprise Autonomous Action Engine**. By leveraging our frontier advances in reasoning capabilities, we are creating a new software category: intelligence as a service that acts autonomously. The product persona we are building toward is a digital agent that can operate asynchronously, executing complex workflows over days or weeks, returning to the human operator only for high-stakes approvals or course correction.
+
+### 2. GO-TO-MARKET & SCOPE: THE VERTICAL WEDGE
+While our ultimate destination is a horizontal API ecosystem where partners build on our agentic scaffolding, the executive team has unanimously agreed that V1 must launch tightly constrained to a high-value vertical (either Legal or Finance). 
+
+We are making this trade-off for three critical reasons:
+
+*   **Technical Risk Mitigation:** Unconstrained autonomous agents pose severe technical risks—specifically chain-of-thought drift and runaway compute, which the CTO estimates could reach 100x to 500x the cost of standard chat workloads. A vertical wedge allows us to hard-code state transitions, build the necessary persistent memory scaffolding safely, and implement strict compute circuit-breakers.
+*   **Establishing Market Trust:** Customers must learn how to safely delegate to an autonomous proxy. A highly opinionated, vertical-specific UI focused on task observability and safe hand-offs will bridge this trust gap much faster than a generalized, blank-canvas dashboard.
+*   **Value-Based Pricing:** A vertical use-case with clear, measurable ROI allows us to test our transition to pricing based on labor replaced. This makes the new pricing model defensible to enterprise procurement while giving Operations time to mature our billing infrastructure for outcome-based margins.
+
+### 3. WHAT WE ARE CHOOSING NOT TO DO
+Strategy is as much about what we ignore as what we pursue. To ensure focus, I have made the following exclusionary calls:
+*   **No generalized horizontal agent framework in V1:** The technical and brand risks of early hallucination loops in an unconstrained environment are existential. We will not ship a "build anything" agent platform until we have mastered the state management in our vertical wedge.
+*   **No native consumer ambient hardware (AR/VR) integration:** The ecosystem is too nascent. Attempting to force our agents into unproven consumer hardware risks locking us into rigid cost structures before we have secured product-market fit in the enterprise.
+
+### 4. OPEN UNCERTAINTIES & OUR DISCOVERY PLAN
+We are operating in a fluid environment with significant unknowns. I want the Board to be fully aware of the friction points we are currently navigating:
+
+*   **Compute Margins & Infrastructure:** We are moving away from per-seat SaaS economics. Because these agents execute asynchronously in the background, we must negotiate vastly expanded, preemptible compute capacity from our cloud vendors to run these tasks profitably. The COO is currently restructuring our vendor agreements to support this.
+*   **UX Friction and Latency Tolerance:** When an agent pauses a multi-day task to ask a human for approval, it writes the session to a persistent memory layer. Re-hydrating that context when the human responds takes several seconds. We do not yet know the user tolerance for this latency. The Product and Design teams are implementing intentional loading states to manage expectations, but we will monitor early usage closely to see if this friction degrades trust.
+
+### CONCLUSION
+The shift from synchronous text generation to asynchronous, multi-tool execution is the next major epoch in enterprise AI. By constraining our initial launch to a high-value vertical, we are intentionally trading short-term horizontal scale for margin safety, trust-building, and technical validation. I look forward to discussing this direction in our upcoming session. [^c1][^c2][^c3]
+
+
+---
+
+## References
+
+[^c1]: **Sam Altman What Startups Will be Steamrolled by OpenAI & Where is Opportunity _ E1223.txt** (chunk Sam Altman What Startups Will be Steamrolled by OpenAI & Where is Opportunity _ E1223.txt#1) — quote: _"[quote removed: 45 words, sha256 ae3eaeb344689bab]"_ — supports: Defines the core product persona and long-horizon asynchronous nature of the Autonomous Action Engine.
+
+[^c2]: **Sam Altman What Startups Will be Steamrolled by OpenAI & Where is Opportunity _ E1223.txt** (chunk Sam Altman What Startups Will be Steamrolled by OpenAI & Where is Opportunity _ E1223.txt#1) — quote: _"[quote removed: 18 words, sha256 a3d87021743a2ab2]"_ — supports: Justifies the strategic shift toward value-based pricing aligned with labor replacement.
+
+[^c3]: **Sam Altman What Startups Will be Steamrolled by OpenAI & Where is Opportunity _ E1223.txt** (chunk Sam Altman What Startups Will be Steamrolled by OpenAI & Where is Opportunity _ E1223.txt#3) — quote: _"[quote removed: 33 words, sha256 563122cea98ea800]"_ — supports: Validates that our frontier advances in reasoning are the fundamental enabler for this new agentic software category.

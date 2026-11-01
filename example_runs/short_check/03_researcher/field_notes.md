@@ -1,0 +1,21 @@
+# Researcher field notes
+
+## Note 1
+
+A strong consensus is rapidly forming against the Product Designer's augmented reality proposal. The COO outright rejected spatial computing due to "fragile hardware supply chains," throwing their weight behind an agentic path. The Product Strategist crystallized this winning direction as "a shift from 'intelligence as a service' to 'execution as a service'." 
+
+However, a fierce sub-debate has erupted regarding risk and domain selection. The CTO, CEO, and Product Strategist are pushing for multi-day workflows in domains like medical and legal, anchoring on the imminent arrival of "PhD-level intelligence." The CMO is actively contesting this, warning against high-liability verticals and advocating instead for "Mid-Stakes, High-Value" targets equipped with "built-in verification loops" for prosumers. 
+
+The conversation is remarkably grounded in operational realities; the CTO is already querying the COO on the diverging compute profiles—batch inference versus real-time low-latency—required to execute these distinct visions.
+
+## Note 2
+
+The sub-debate I flagged over domain risk is decisively resolving in the CMO's favor. The team is abandoning the healthcare vertical in real time. The COO rejected the medical route, citing a lack of "organizational muscle to tackle a highly regulated vertical organically," while the CMO declared "zero" appetite for an "'AI Diagnostician' in V1" to protect "brand trust."
+
+Faced with this united front, the CEO is preparing to pivot the rollout toward an "AI Scientist" model targeting Software Engineering and Data Science, anchoring on "compilers/test suites as automated feedback loops." The Product Designer has fully folded on their spatial computing proposal, formally adopting the "'really smart senior co-worker' paradigm" and pivoting to design "Mission Control" interfaces with audit trails. The panel shows a striking willingness to kill ambitious visions the moment operational and liability hurdles are explicitly quantified.
+
+## Note 3
+
+The consensus I tracked earlier has now fully crystallized into formal artefacts across the entire team. The "AI Scientist" beachhead is locked in, but the operational ripple effects are massive. We are witnessing a fundamental business model transformation: the COO is launching a "Compute-Outcome Billing Project" to replace per-seat SaaS with utility pricing, which the CMO is explicitly framing against the "ROI of labor replacement."
+
+Most fascinating is the user experience paradigm emerging from this pivot. The Product Designer is deliberately abandoning consumer-style seamlessness, noting they are "actively injecting UX friction (audit trails, approval gates)" to establish enterprise trust. This directly mirrors the CTO's architectural tension between "Deep inference efficiency" and the need to expose "Real-time telemetry visibility." The team is uniformly trading away the magic of instant generative outputs in favor of asynchronous, heavily audited "Execution-as-a-Service."

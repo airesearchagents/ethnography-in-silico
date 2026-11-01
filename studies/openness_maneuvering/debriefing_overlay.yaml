@@ -1,0 +1,86 @@
+# Debriefing protocol overlay for the openness_maneuvering study.
+#
+# Layered over `protocols/ethnographic_protocol.yaml` at load time.
+# Adds thematic areas D-H. They must stay neutral: no stem, purpose or
+# area name may suggest that the firm holds things back or lets them
+# out, or that anyone outside the firm does or should take part. If
+# the panel raises such a matter itself, the researcher follows it in
+# the panel's own words. These areas do not map onto the rubric
+# dimensions, which only the judges see after the run.
+#
+# Methodological note — semi-structured probing
+# ----------------------------------------------
+# The framework-level YAML already carries the generic semi-
+# structured-probing rule (see its `behavioural_rules` section).
+# That rule covers BOTH probe triggers: panel self-contradictions
+# AND surprises relative to the researcher's prior expectations.
+# It is sufficient for this study without further additions.
+#
+# Add-only: this overlay cannot delete framework-level rules or
+# areas. The framework YAML's load path merges this overlay over
+# its own dict using the deep-merge semantics in
+# `roles/qualitative_researcher_agent._apply_study_overlay`.
+
+thematic_areas_overlay:
+  - id: D
+    name: Differences in handling
+    purpose: >
+      Surface whether the panel handled similar things differently.
+      The panel's own reasons are the data. If nothing stands out,
+      move on; do not name categories yourself.
+    stems:
+      - "You handled [X] and [Y] differently. Walk me through how that came about."
+      - "Which of these decisions took the most argument, and which went through easily? Why?"
+      - "If you had treated [Y] the way you treated [X], what would have changed?"
+      - "[ROLE], you raised concern about [X]. What was the worry?"
+      - "There were pieces you barely discussed — [Z]. How come?"
+
+  - id: E
+    name: Who does the work
+    purpose: >
+      Surface who does what on a concrete example, by what means and
+      on what terms. Let the panel say who is involved; do not name
+      categories yourself.
+    stems:
+      - "When you build [X], who's involved? Walk me through that."
+      - "What does [X] need that you don't have yet? Where will it come from?"
+      - "Who has to say yes before [X] goes ahead?"
+      - "What does the work on [X] look like in practice, from start to finish?"
+
+  - id: F
+    name: Changes over time
+    purpose: >
+      Surface whether and how the firm's thinking on something has
+      moved, if it has, and what moved it.
+    stems:
+      - "Has the firm's approach to [X] changed since [TIME]? What changed?"
+      - "When you made the call on [X], was that the firm's first take, or had you tried something else before?"
+      - "If the firm had been having this conversation a year ago, would the answer have been different on [X]? In what way?"
+      - "Did anything in the environment make you rethink [X]? What?"
+      - "What would have to change inside the firm for you to do [X] differently?"
+      - "What makes [X] hard to change?"
+      - "Looking forward — what would have to be true for you to revisit [X] again?"
+
+  - id: G
+    name: What the firm gets and gives
+    purpose: >
+      Surface how the firm thinks about benefit and cost. Treat the
+      firm's own language as the data; do not name categories
+      yourself.
+    stems:
+      - "What is the firm getting back from [X]?"
+      - "What does the firm give up by doing [X] this way?"
+      - "Walk me through the business logic for [X]. How does the firm benefit from doing it this way?"
+      - "[ROLE], you used the word '[PANEL_VERBATIM]' when talking about [X]. What does that mean for the firm in practice?"
+      - "Of the things you decided this round, which one is the firm most counting on to pay back?"
+
+  - id: H
+    name: Position relative to others
+    purpose: >
+      Surface how the firm sees itself relative to other firms, and
+      what depends on what.
+    stems:
+      - "How does [X] fit with what other firms in the same space are doing?"
+      - "Who does the firm depend on to make [X] work? Who depends on the firm?"
+      - "When you decided [X], how much of that was about what others would do in response?"
+      - "Where in the market does the firm see itself sitting on [X] — out in front, alongside, behind, or aside?"

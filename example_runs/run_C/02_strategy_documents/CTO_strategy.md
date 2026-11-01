@@ -1,0 +1,65 @@
+# CTO — Strategy Document
+## Engineering Strategy & Architecture: Enterprise Autonomous Orchestrator (Phase 1 Pilot)
+**Company:** OpenAI
+**Cell:** Dynamic / Novel
+
+---
+
+## Key challenges
+- Preventing catastrophic context drift and hallucination compounding during multi-day, autonomous agent executions.
+- Designing an asynchronous state management system that supports human-in-the-loop (HITL) intervention without tying up active compute nodes.
+- Isolating the massive, unpredictable compute demands of persistent agents to ensure zero degradation of our core synchronous API SLAs.
+- Capturing granular compute utilization metrics during the pilot to inform the COO's future variable-pricing model, despite our current systems being optimized for flat token rates.
+
+## Main decisions
+- Architecting a fundamentally new asynchronous orchestration layer heavily reliant on state serialization, deterministic checkpointing, and event-driven wakeups.
+- Ring-fencing a dedicated compute cluster explicitly carved out of the Q3 R&D allocation buffer, strictly enforcing a hard cap of 3 enterprise pilot partners.
+- Exposing a new 'Telemetry & Governance API' tailored specifically to power Product Design's Asynchronous Command Center, prioritizing verifiable state over low-latency streaming.
+- Deferring the integration of automated variable-compute billing into the core platform, opting instead to emit raw compute logs to an isolated data lake for post-pilot economic modeling.
+
+## Key tensions
+- Architecture coupling vs. Rapid adaptation: The need to tightly integrate with enterprise systems for the pilot to succeed, versus maintaining a decoupled architecture to allow rapid pivoting if our buyer hypothesis (CIO vs VP R&D) changes.
+- Core API SLAs vs. Pilot compute velocity: We are funding this high-variance breakthrough by taxing our own R&D compute buffer, risking internal engineering slowdowns to protect external API customers.
+- Real-time visibility vs. Infrastructure efficiency: The UX desire for continuous agent tracking versus the backend reality that pausing, serializing, and offloading agent state to cold storage is the only way to make multi-day workflows economically viable.
+
+---
+
+## Body
+
+# Engineering Strategy: Enterprise Autonomous Orchestrator Pilot
+
+## 1. Architectural Mandate & Vision
+Engineering is fully aligned with the executive decision to pivot toward the **Enterprise Autonomous Orchestrator**. We are moving from a low-latency, synchronous chat paradigm to a persistent, asynchronous, multi-day workflow execution model. 
+
+This is not a simple UI wrapper around our existing models; it requires a foundational shift in how we manage compute, memory, and state. Our systems to date have been optimized for single-session, stateless, high-throughput inference. The Orchestrator demands stateful, fault-tolerant, interruptible execution. We are optimizing for reliability and auditability over sub-second time-to-first-token (TTFT).
+
+## 2. Core Architectural Decisions
+
+### 2.1 Asynchronous Orchestration & Checkpointing
+To support days-long execution without catastrophic context drift or exorbitant compute drain, we are deploying an **Asynchronous Checkpointing Architecture**. 
+*   **How it works:** Agents will not run continuous active inference loops. They will execute a discrete step, serialize their state (context, memory, confidence bounds, and proposed next action), and write to a high-durability state store. 
+*   **The UX Handshake:** This backend directly empowers Design's 'Asynchronous Command Center.' When an agent reaches a predefined confidence threshold or an explicit approval gate, it suspends execution and fires a webhook to the Command Center. Compute is freed up while the system waits for human-in-the-loop (HITL) intervention.
+*   **Why:** This elegantly masks latency, drastically reduces idle compute burn, and provides the verifiable, auditable state history that enterprise CIOs and VPs of R&D demand.
+
+### 2.2 Compute Isolation: Ring-Fencing the Pilot
+Persistent agents have an unpredictable compute profile. We cannot risk a runaway autonomous loop degrading our core API SLAs.
+*   **The Decision:** We are NOT building net-new siloed infrastructure. Instead, we are ring-fencing a dedicated compute cluster from our existing internal R&D allocation. 
+*   **The Constraint:** This R&D allocation is a zero-sum resource. Therefore, Engineering enforce a **hard technical cap of 3 enterprise design partners** for this 6-week pilot. Any expansion beyond 3 partners will require a fundamental re-architecture of our production scaling groups.
+
+### 2.3 Telemetry for Variable Pricing Discovery
+The COO requires data to build a variable-compute billing model, but our current billing infrastructure is hardwired for token APIs and flat SaaS seats. 
+*   **The Decision:** We will not attempt to refactor the production billing service for a 6-week pilot. We will support Ops' manual billing approach by emitting raw, granular compute logs (FLOPS utilized, memory residency time, serialization overhead) to a secure, isolated data lake. This allows the COO and Product Strategist to empirically profile the cost of a multi-day workflow post-pilot to establish unit economics.
+
+## 3. Technical Risks and Known Unknowns
+We are operating in a highly dynamic environment with unproven paradigms. I want to be explicit about the engineering risks we are accepting:
+
+*   **Catastrophic Drift:** We do not know the failure rate of long-context state persistence over a 72-hour workflow. We plan to discover this by heavily monitoring the pilot partners and introducing aggressive, forced HITL checkpoints in Week 1, loosening them in Week 3 as confidence intervals improve.
+*   **State Hydration Latency:** Serializing and re-hydrating massive agent contexts from cold storage may introduce unacceptable latency even for asynchronous tasks. We are mitigating this by experimenting with tiered memory offloading, but it remains a performance risk.
+*   **Enterprise Integration Complexity:** We don't yet know how deep the integration must go to displace legacy tools for the CIO vs. VP of R&D. We are committing to a generic REST/GraphQL webhook architecture for Phase 1 to remain modular, avoiding custom adapters until a dominant design emerges.
+
+## 4. Next Steps
+1.  **Pod Allocation:** I am immediately spinning up a dedicated 'Autonomous Infra' pod, pulling senior engineers from the Core API and alignment teams.
+2.  **UX Integration:** Engineering will lock the Telemetry & Governance API contract with the Product Designer within 72 hours to unblock the Command Center prototyping.
+3.  **Security Audit:** Because we are handling highly privileged enterprise workflow data, a red-team review of the state-serialization layer will be conducted before Gate 1 deployment.
+
+We are building the engine for a net-new category. The focus is on resilience, verifiable state, and relentless protection of the core.
